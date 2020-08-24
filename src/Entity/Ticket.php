@@ -58,6 +58,9 @@ class Ticket
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->setStatus("open");
+        $this->setPriority("low");
+        $this->setPosted(new \DateTime());
     }
 
     public function getId(): ?int
