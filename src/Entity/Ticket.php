@@ -81,6 +81,8 @@ class Ticket
         $this->setStatus("open");
         $this->setPriority("low");
         $this->setPosted(new \DateTime());
+        $this->setEscalated(false);
+        $this->setReopened(false);
     }
 
     public function getId(): ?int
