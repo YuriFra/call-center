@@ -5,10 +5,12 @@ namespace App\Controller;
 use App\Entity\Ticket;
 use App\Form\TicketType;
 use App\Repository\TicketRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @Route("/ticket")
@@ -28,13 +30,15 @@ class TicketController extends AbstractController
     /**
      * @Route("/new", name="ticket_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, UserInterface $userInterface, UserRepository $userRepository): Response
     {
         $ticket = new Ticket();
         $form = $this->createForm(TicketType::class, $ticket);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $user=$userRepository->findOneBy(["username"=>$userInterface->getUsername()]);
+            $ticket->setUser($user);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($ticket);
             $entityManager->flush();
