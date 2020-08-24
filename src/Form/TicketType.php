@@ -14,10 +14,7 @@ class TicketType extends AbstractType
         $builder
             ->add('title')
             ->add('message')
-            ->add('status')
-            ->add('priority')
-            ->add('posted')
-            ->add('user')
+
         ;
     }
 
