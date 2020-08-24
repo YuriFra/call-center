@@ -13,9 +13,6 @@ class CommentType extends AbstractType
     {
         $builder
             ->add('comment')
-            ->add('private')
-            ->add('user')
-            ->add('ticket')
         ;
     }
 
