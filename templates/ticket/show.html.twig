@@ -36,7 +36,19 @@
     <br>
     <h3>Comments</h3>
     {% for comment in ticket.comments %}
-    <li>{{ comment.user.username }} - {{ comment.comment }}</li>
+        {% if comment.private == false %}
+            <li>
+                <p>User: {{ comment.user.username }}</p>
+                <p>Comment: {{ comment.comment }}</p>
+            </li>
+        {% elseif is_granted('ROLE_AGENT') %}
+            <li>
+                <p>User: {{ comment.user.username }}</p>
+                <p>Roles: {{ comment.user.roles|join }}</p>
+                <p>Comment: {{ comment.comment }}</p>
+                <p>Private: {{ comment.private }}</p>
+            </li>
+        {% endif %}
     {% endfor %}
     <br>
     <a href="{{ path('ticket_index') }}">back to list</a>

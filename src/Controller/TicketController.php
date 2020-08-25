@@ -90,6 +90,7 @@ class TicketController extends AbstractController
      * @param Request $request
      * @param UserRepository $userRepository
      * @param UserInterface $userInterface
+     * @param Ticket $ticket
      * @return Response
      */
     public function addComment(Request $request, UserRepository $userRepository, UserInterface $userInterface, Ticket $ticket): Response
@@ -101,8 +102,12 @@ class TicketController extends AbstractController
         $user = $userRepository->findOneBy(['username' => $userInterface->getUsername()]);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
             $comment->setUser($user);
             $comment->setTicket($ticket);
+            if (in_array("ROLE_AGENT", $userInterface->getRoles())) {
+                $comment->setPrivate($data->getPrivate());
+            }
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($comment);
             $entityManager->flush();
@@ -113,10 +118,9 @@ class TicketController extends AbstractController
         return $this->render('comment/new.html.twig', [
             'comment' => $comment,
             'form' => $form->createView(),
+            'user' => $user,
         ]);
     }
-
-
 
     /**
      * @Route("/{id}/edit", name="ticket_edit", methods={"GET","POST"})
