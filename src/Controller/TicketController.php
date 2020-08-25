@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Ticket;
+use App\Form\ResponseCustomerType;
 use App\Form\TicketType;
 use App\Repository\TicketRepository;
 use App\Repository\UserRepository;
@@ -22,6 +23,7 @@ class TicketController extends AbstractController
      */
     public function index(TicketRepository $ticketRepository): Response
     {
+
         return $this->render('ticket/index.html.twig', [
             'tickets' => $ticketRepository->findAll(),
         ]);
@@ -79,6 +81,27 @@ class TicketController extends AbstractController
         return $this->render('ticket/edit.html.twig', [
             'ticket' => $ticket,
             'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/respond", name="ticket_respond", methods={"GET","POST"})
+     */
+    public function respond(Request $request, Ticket $ticket): Response
+    {
+
+        $form = $this->createForm(ResponseCustomerType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $ticket->setStatus("in progress");
+            $this->getDoctrine()->getManager()->flush();
+            return $this->redirectToRoute('ticket_index');
+        }
+
+        return $this->render('ticket/agentMail.html.twig', [
+            'ticket' => $ticket,
+             'form' => $form->createView(),
         ]);
     }
 
