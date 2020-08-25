@@ -55,9 +55,34 @@ class Ticket
      */
     private $comments;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $agent_id;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $escalated;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $reopened;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $wont_fix;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->setStatus("open");
+        $this->setPriority("low");
+        $this->setPosted(new \DateTime());
+        $this->setEscalated(false);
+        $this->setReopened(false);
     }
 
     public function getId(): ?int
@@ -164,6 +189,54 @@ class Ticket
                 $comment->setTicket(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAgentId(): ?int
+    {
+        return $this->agent_id;
+    }
+
+    public function setAgentId(?int $agent_id): self
+    {
+        $this->agent_id = $agent_id;
+
+        return $this;
+    }
+
+    public function getEscalated(): ?bool
+    {
+        return $this->escalated;
+    }
+
+    public function setEscalated(bool $escalated): self
+    {
+        $this->escalated = $escalated;
+
+        return $this;
+    }
+
+    public function getReopened(): ?bool
+    {
+        return $this->reopened;
+    }
+
+    public function setReopened(bool $reopened): self
+    {
+        $this->reopened = $reopened;
+
+        return $this;
+    }
+
+    public function getWontFix(): ?string
+    {
+        return $this->wont_fix;
+    }
+
+    public function setWontFix(?string $wont_fix): self
+    {
+        $this->wont_fix = $wont_fix;
 
         return $this;
     }
