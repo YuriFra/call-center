@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Ticket;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
