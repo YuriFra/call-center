@@ -86,16 +86,36 @@ class TicketController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/{user_id}", name="ticket_assign", methods={"GET"})
+     * @Route("/{id}/comment", name="ticket_comment", methods={"GET","POST"})
+     * @param Request $request
+     * @param UserRepository $userRepository
+     * @param UserInterface $userInterface
+     * @return Response
      */
-    public function assignTicket(Ticket $ticket, UserInterface $userInterface, UserRepository $userRepository): \Symfony\Component\HttpFoundation\RedirectResponse
+    public function addComment(Request $request, UserRepository $userRepository, UserInterface $userInterface, Ticket $ticket): Response
     {
-        $user=$userRepository->findOneBy(["username"=>$userInterface->getUsername()]);
-            $ticket->setStatus('In progress');
-            $ticket->setAgentId($user->getId());
-            $this->getDoctrine()->getManager()->flush();
-            return $this->redirectToRoute('ticket_index');
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+
+        $user = $userRepository->findOneBy(['username' => $userInterface->getUsername()]);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment->setUser($user);
+            $comment->setTicket($ticket);
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($comment);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('ticket_show',['id'=>$ticket->getId()]);
+        }
+
+        return $this->render('comment/new.html.twig', [
+            'comment' => $comment,
+            'form' => $form->createView(),
+        ]);
     }
+
 
 
     /**
@@ -155,33 +175,15 @@ class TicketController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/comment", name="ticket_comment", methods={"GET","POST"})
-     * @param Request $request
-     * @param UserRepository $userRepository
-     * @param UserInterface $userInterface
-     * @return Response
+     * @Route("/{id}/{user_id}", name="ticket_assign", methods={"GET"})
      */
-    public function addComment(Request $request, UserRepository $userRepository, UserInterface $userInterface, Ticket $ticket): Response
+    public function assignTicket(Ticket $ticket, UserInterface $userInterface, UserRepository $userRepository): \Symfony\Component\HttpFoundation\RedirectResponse
     {
-        $comment = new Comment();
-        $form = $this->createForm(CommentType::class, $comment);
-        $form->handleRequest($request);
-
-        $user = $userRepository->findOneBy(['username' => $userInterface->getUsername()]);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $comment->setUser($user);
-            $comment->setTicket($ticket);
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($comment);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('ticket_show',['id'=>$ticket->getId()]);
-        }
-
-        return $this->render('comment/new.html.twig', [
-            'comment' => $comment,
-            'form' => $form->createView(),
-        ]);
+        $user=$userRepository->findOneBy(["username"=>$userInterface->getUsername()]);
+        $ticket->setStatus('In progress');
+        $ticket->setAgentId($user->getId());
+        $this->getDoctrine()->getManager()->flush();
+        return $this->redirectToRoute('ticket_index');
     }
+
 }
