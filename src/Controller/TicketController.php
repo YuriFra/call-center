@@ -103,7 +103,9 @@ class TicketController extends AbstractController
     public function escalate(Ticket $ticket, UserRepository $userRepository, Request $request): Response
     {
         $users = $userRepository->findAll();
-        if($request->request->get('save') == ""){
+
+        //@todo:  vraag koen $request->request->get('premiumAgents')
+        if($request->getMethod()=='POST'){
             $ticket->setAgentId($request->request->get('premiumAgents'));
             $ticket->setEscalated(true);
             $this->getDoctrine()->getManager()->flush();
