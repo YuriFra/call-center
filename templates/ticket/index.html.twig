@@ -14,7 +14,11 @@
                 <th>Status</th>
                 <th>Priority</th>
                 <th>Posted</th>
+                <th>Agent</th>
                 <th>actions</th>
+                {% if "ROLE_AGENT" in user.roles %}
+                <th>Agent actions</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
@@ -26,6 +30,7 @@
                 <td>{{ ticket.status }}</td>
                 <td>{{ ticket.priority }}</td>
                 <td>{{ ticket.posted ? ticket.posted|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ ticket.agentId }}</td>
                 <td>
                     <a href="{{ path('ticket_show', {'id': ticket.id}) }}">show</a>
                     <a href="{{ path('ticket_edit', {'id': ticket.id}) }}">edit</a>
@@ -34,6 +39,14 @@
                     <a href="{{ path('ticket_respond', {'id': ticket.id}) }}">mail agent</a>
                     {% endif %}
                 </td>
+
+                {% if "ROLE_AGENT" in user.roles %}
+                    <td>
+
+                        <a href="{{  path('ticket_assign', {'id': ticket.id,'user_id': user.id}) }}">Assign myself</a>
+
+                    </td>
+                {% endif %}
             </tr>
         {% else %}
             <tr>

@@ -27,9 +27,25 @@ class TicketController extends AbstractController
     public function index(TicketRepository $ticketRepository, UserInterface $userInterface, UserRepository $userRepository): Response
     {
         $user = $userRepository->findOneBy(['username' => $userInterface->getUsername()]);
+        if (in_array("ROLE_AGENT", $userInterface->getRoles())) {
+            $allTickets=$ticketRepository->findAll();
+            $tickets=[];
+            foreach ($allTickets as $ticket){
+                if($ticket->getAgentId()===null || $ticket->getAgentId()===$user->getId()){
+                    $tickets[]=$ticket;
+                }
+            }
+
+        } else {
+
+            $tickets = $ticketRepository->findBy(['user' => $user->getId()]);
+        }
+
+
 
         return $this->render('ticket/index.html.twig', [
-            'tickets' => $ticketRepository->findBy(['user' => $user->getId()]),
+            'tickets' => $tickets,
+            'user'=>$user,
         ]);
     }
 
@@ -63,10 +79,24 @@ class TicketController extends AbstractController
      */
     public function show(Ticket $ticket): Response
     {
+
         return $this->render('ticket/show.html.twig', [
             'ticket' => $ticket,
         ]);
     }
+
+    /**
+     * @Route("/{id}/{user_id}", name="ticket_assign", methods={"GET"})
+     */
+    public function assignTicket(Ticket $ticket, UserInterface $userInterface, UserRepository $userRepository): \Symfony\Component\HttpFoundation\RedirectResponse
+    {
+        $user=$userRepository->findOneBy(["username"=>$userInterface->getUsername()]);
+            $ticket->setStatus('In progress');
+            $ticket->setAgentId($user->getId());
+            $this->getDoctrine()->getManager()->flush();
+            return $this->redirectToRoute('ticket_index');
+    }
+
 
     /**
      * @Route("/{id}/edit", name="ticket_edit", methods={"GET","POST"})

@@ -58,7 +58,7 @@ class Ticket
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $agent_id;
+    private $agentId;
 
     /**
      * @ORM\Column(type="boolean")
@@ -73,7 +73,7 @@ class Ticket
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $wont_fix;
+    private $wontFix;
 
     public function __construct()
     {
@@ -195,12 +195,12 @@ class Ticket
 
     public function getAgentId(): ?int
     {
-        return $this->agent_id;
+        return $this->agentId;
     }
 
-    public function setAgentId(?int $agent_id): self
+    public function setAgentId(?int $agentId): self
     {
-        $this->agent_id = $agent_id;
+        $this->agentId = $agentId;
 
         return $this;
     }
@@ -231,12 +231,12 @@ class Ticket
 
     public function getWontFix(): ?string
     {
-        return $this->wont_fix;
+        return $this->wontFix;
     }
 
-    public function setWontFix(?string $wont_fix): self
+    public function setWontFix(?string $wontFix): self
     {
-        $this->wont_fix = $wont_fix;
+        $this->wontFix = $wontFix;
 
         return $this;
     }
