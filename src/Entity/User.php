@@ -15,6 +15,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface
 {
+
+    public const roles=["USER"=>"ROLE_USER", "FLA"=>"ROLE_AGENT","SLA"=>"ROLE_PREMIUM_AGENT", "MANAGER"=>"ROLE_MANAGER" ];
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -62,7 +64,7 @@ class User implements UserInterface
     {
         $this->ticket = new ArrayCollection();
         $this->comments = new ArrayCollection();
-        $this->setRoles(['ROLE_USER']);
+        $this->setRoles(self::roles["USER"]);
     }
 
     public function getId(): ?int
@@ -93,8 +95,7 @@ class User implements UserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_CUSTOMER';
+
 
         return array_unique($roles);
     }

@@ -28,7 +28,7 @@ class TicketController extends AbstractController
     public function index(TicketRepository $ticketRepository, UserInterface $userInterface, UserRepository $userRepository): Response
     {
         $user = $userRepository->findOneBy(['username' => $userInterface->getUsername()]);
-        if (in_array("ROLE_AGENT", $userInterface->getRoles())) {
+        if (in_array(User::roles['FLA'], $userInterface->getRoles())) {
             $allTickets=$ticketRepository->findAll();
             $tickets=[];
             foreach ($allTickets as $ticket){
@@ -47,6 +47,8 @@ class TicketController extends AbstractController
         return $this->render('ticket/index.html.twig', [
             'tickets' => $tickets,
             'user'=>$user,
+            'statuses'=>Ticket::status,
+            'roles'=>User::roles,
         ]);
     }
 
@@ -83,6 +85,7 @@ class TicketController extends AbstractController
 
         return $this->render('ticket/show.html.twig', [
             'ticket' => $ticket,
+            'roles'=>User::roles,
         ]);
     }
 
@@ -91,7 +94,7 @@ class TicketController extends AbstractController
      */
     public function close(Ticket $ticket): Response
     {
-        $ticket->setStatus("closed");
+        $ticket->setStatus(Ticket::status['closed']);
         $ticket->setClosed(new DateTime());
         $this->getDoctrine()->getManager()->flush();
         return $this->redirectToRoute('ticket_index');
@@ -113,6 +116,7 @@ class TicketController extends AbstractController
         }
         return $this->render('ticket/escalate.html.twig', [
             'users' => $users,
+            'roles'=>User::roles,
         ]);
     }
 
@@ -121,7 +125,7 @@ class TicketController extends AbstractController
      */
     public function reopen(Ticket $ticket): Response
     {
-        $ticket->setStatus("open");
+        $ticket->setStatus(Ticket::status["open"]);
         $ticket->setClosed(NULL);
         $this->getDoctrine()->getManager()->flush();
         return $this->redirectToRoute('ticket_index');
@@ -147,7 +151,7 @@ class TicketController extends AbstractController
             $data = $form->getData();
             $comment->setUser($user);
             $comment->setTicket($ticket);
-            if (in_array("ROLE_AGENT", $userInterface->getRoles())) {
+            if (in_array(User::roles["FLA"], $userInterface->getRoles())) {
                 $comment->setPrivate($data->getPrivate());
             }
             $entityManager = $this->getDoctrine()->getManager();
@@ -194,7 +198,7 @@ class TicketController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $ticket->setStatus("in progress");
+            $ticket->setStatus(Ticket::status['in progress']);
             $this->getDoctrine()->getManager()->flush();
             return $this->redirectToRoute('ticket_index');
         }
@@ -226,7 +230,7 @@ class TicketController extends AbstractController
     public function assignTicket(Ticket $ticket, UserInterface $userInterface, UserRepository $userRepository): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         $user=$userRepository->findOneBy(["username"=>$userInterface->getUsername()]);
-        $ticket->setStatus('In progress');
+        $ticket->setStatus(Ticket::status['in progress']);
         $ticket->setAgentId($user->getId());
         $this->getDoctrine()->getManager()->flush();
         return $this->redirectToRoute('ticket_index');

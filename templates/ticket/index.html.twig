@@ -16,7 +16,7 @@
                 <th>Posted</th>
                 <th>Agent</th>
                 <th>actions</th>
-                {% if "ROLE_AGENT" in user.roles %}
+                {% if roles['FLA'] in user.roles %}
                 <th>Agent actions</th>
                 {% endif %}
             </tr>
@@ -35,18 +35,18 @@
                     <a href="{{ path('ticket_show', {'id': ticket.id}) }}">show</a>
                     <a href="{{ path('ticket_edit', {'id': ticket.id}) }}">edit</a>
                     <a href="{{ path('ticket_comment', {'id': ticket.id}) }}">add comment</a>
-                    {% if ticket.status is same as('Waiting for customer feedback') %}
+                    {% if ticket.status is same as(statuses["Waiting for customer feedback"]) %}
                     <a href="{{ path('ticket_respond', {'id': ticket.id}) }}">mail agent</a>
                     {% endif %}
-                    {% if ticket.canReopen() and ticket.status is same as ("closed") %}
+                    {% if ticket.canReopen() and ticket.status is same as (statuses["closed"]) %}
                         <a href="{{ path('ticket_reopen', {'id': ticket.id}) }}">Reopen</a>
                     {% endif %}
                 </td>
 
-                {% if "ROLE_AGENT" in user.roles %}
+                {% if roles['FLA'] in user.roles %}
                     <td>
                         <a href="{{  path('ticket_assign', {'id': ticket.id,'user_id': user.id}) }}">Assign myself</a>
-                        {% if ticket.status != "closed" and ticket.comments|length > 0%}
+                        {% if ticket.status != statuses["closed"] and ticket.comments|length > 0%}
                             <a href="{{  path('ticket_close', {'id': ticket.id}) }}">Close ticket</a>
                         {% endif %}
                         {% if ticket.agentId != NULL %}

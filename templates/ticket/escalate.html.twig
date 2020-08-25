@@ -8,7 +8,7 @@
     <form method="post">
         <select name="premiumAgents">
             {% for user in users %}
-                {% if "ROLE_PREMIUM_AGENT" in user.roles %}
+                {% if roles['SLA'] in user.roles %}
                     <option value="{{ user.id }}">{{ user.username }}</option>
                 {% endif %}
             {% endfor %}
