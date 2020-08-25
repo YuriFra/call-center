@@ -47,7 +47,9 @@
                     <td>
 
                         <a href="{{  path('ticket_assign', {'id': ticket.id,'user_id': user.id}) }}">Assign myself</a>
-                        <a href="{{  path('ticket_close', {'id': ticket.id}) }}">Close ticket</a>
+                        {% if ticket.status != "closed" %}
+                            <a href="{{  path('ticket_close', {'id': ticket.id}) }}">Close ticket</a>
+                        {% endif %}
 
                     </td>
                 {% endif %}

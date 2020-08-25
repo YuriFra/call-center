@@ -266,7 +266,7 @@ class Ticket
             return false;
         }
         $interval = $closedTicket->diff(new DateTime());
-        if($interval->format('%i') > 1){
+        if($interval->format('%i') >= 1){
             return true;
         }
         else {
