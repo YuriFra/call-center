@@ -62,6 +62,7 @@ class User implements UserInterface
     {
         $this->ticket = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->setRoles(['ROLE_USER']);
     }
 
     public function getId(): ?int
