@@ -28,7 +28,6 @@ class TicketController extends AbstractController
     public function index(TicketRepository $ticketRepository, UserInterface $userInterface, UserRepository $userRepository): Response
     {
         $user = $userRepository->findOneBy(['username' => $userInterface->getUsername()]);
-        $now = new DateTime();
         if (in_array("ROLE_AGENT", $userInterface->getRoles())) {
             $allTickets=$ticketRepository->findAll();
             $tickets=[];
@@ -48,7 +47,6 @@ class TicketController extends AbstractController
         return $this->render('ticket/index.html.twig', [
             'tickets' => $tickets,
             'user'=>$user,
-            'now'=>$now,
         ]);
     }
 
@@ -97,6 +95,23 @@ class TicketController extends AbstractController
         $ticket->setClosed(new DateTime());
         $this->getDoctrine()->getManager()->flush();
         return $this->redirectToRoute('ticket_index');
+    }
+
+    /**
+     * @Route("/{id}/escalate", name="ticket_escalate", methods={"GET", "POST"})
+     */
+    public function escalate(Ticket $ticket, UserRepository $userRepository, Request $request): Response
+    {
+        $users = $userRepository->findAll();
+        if($request->request->get('save') == ""){
+            $ticket->setAgentId($request->request->get('premiumAgents'));
+            $ticket->setEscalated(true);
+            $this->getDoctrine()->getManager()->flush();
+            return $this->redirectToRoute('ticket_index');
+        }
+        return $this->render('ticket/escalate.html.twig', [
+            'users' => $users,
+        ]);
     }
 
     /**
