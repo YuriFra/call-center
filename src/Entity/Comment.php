@@ -39,6 +39,14 @@ class Comment
      */
     private $ticket;
 
+    /**
+     * Comment constructor.
+     */
+    public function __construct()
+    {
+        $this->private = false;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
