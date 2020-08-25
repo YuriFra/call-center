@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\TicketRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -74,6 +75,11 @@ class Ticket
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $wontFix;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $closed;
 
     public function __construct()
     {
@@ -239,5 +245,32 @@ class Ticket
         $this->wontFix = $wontFix;
 
         return $this;
+    }
+
+    public function getClosed(): ?\DateTimeInterface
+    {
+        return $this->closed;
+    }
+
+    public function setClosed(?\DateTimeInterface $closed): self
+    {
+        $this->closed = $closed;
+
+        return $this;
+    }
+
+    public function canReopen(): bool
+    {
+        $closedTicket = $this->closed;
+        if($closedTicket == NULL){
+            return false;
+        }
+        $interval = $closedTicket->diff(new DateTime());
+        if($interval->format('%i') > 1){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

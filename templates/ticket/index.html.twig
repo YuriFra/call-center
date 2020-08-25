@@ -38,12 +38,16 @@
                     {% if ticket.status is same as('Waiting for customer feedback') %}
                     <a href="{{ path('ticket_respond', {'id': ticket.id}) }}">mail agent</a>
                     {% endif %}
+                    {% if ticket.canReopen() and ticket.status is same as ("closed") %}
+                        <a href="{{ path('ticket_reopen', {'id': ticket.id}) }}">Reopen</a>
+                    {% endif %}
                 </td>
 
                 {% if "ROLE_AGENT" in user.roles %}
                     <td>
 
                         <a href="{{  path('ticket_assign', {'id': ticket.id,'user_id': user.id}) }}">Assign myself</a>
+                        <a href="{{  path('ticket_close', {'id': ticket.id}) }}">Close ticket</a>
 
                     </td>
                 {% endif %}

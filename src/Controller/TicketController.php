@@ -10,6 +10,7 @@ use App\Form\ResponseCustomerType;
 use App\Form\TicketType;
 use App\Repository\TicketRepository;
 use App\Repository\UserRepository;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,6 +28,7 @@ class TicketController extends AbstractController
     public function index(TicketRepository $ticketRepository, UserInterface $userInterface, UserRepository $userRepository): Response
     {
         $user = $userRepository->findOneBy(['username' => $userInterface->getUsername()]);
+        $now = new DateTime();
         if (in_array("ROLE_AGENT", $userInterface->getRoles())) {
             $allTickets=$ticketRepository->findAll();
             $tickets=[];
@@ -46,6 +48,7 @@ class TicketController extends AbstractController
         return $this->render('ticket/index.html.twig', [
             'tickets' => $tickets,
             'user'=>$user,
+            'now'=>$now,
         ]);
     }
 
@@ -83,6 +86,28 @@ class TicketController extends AbstractController
         return $this->render('ticket/show.html.twig', [
             'ticket' => $ticket,
         ]);
+    }
+
+    /**
+     * @Route("/{id}/close", name="ticket_close", methods={"GET"})
+     */
+    public function close(Ticket $ticket): Response
+    {
+        $ticket->setStatus("closed");
+        $ticket->setClosed(new DateTime());
+        $this->getDoctrine()->getManager()->flush();
+        return $this->redirectToRoute('ticket_index');
+    }
+
+    /**
+     * @Route("/{id}/reopen", name="ticket_reopen", methods={"GET"})
+     */
+    public function reopen(Ticket $ticket): Response
+    {
+        $ticket->setStatus("open");
+        $ticket->setClosed(NULL);
+        $this->getDoctrine()->getManager()->flush();
+        return $this->redirectToRoute('ticket_index');
     }
 
     /**
