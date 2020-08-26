@@ -7,7 +7,7 @@
     <form method="post">
         <select name="priorities">
             {% for key,priority in priorities %}
-                    <option value="{{ priority.getCounterOpen() }}">{{ priority }}</option>
+                    <option value="{{ priority }}">{{ priority }}</option>
             {% endfor %}
         </select>
         <button type="submit" name="save">Adjust priority</button>
