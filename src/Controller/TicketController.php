@@ -153,7 +153,7 @@ class TicketController extends AbstractController
             $comment->setTicket($ticket);
             if (in_array(User::roles["FLA"], $userInterface->getRoles())) {
                 $comment->setPrivate($data->getPrivate());
-                $ticket->
+
             }
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($comment);
