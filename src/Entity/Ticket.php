@@ -18,7 +18,8 @@ class Ticket
         "in progress"=>"in progress",
         "open"=>"open",
         "closed"=>"closed",
-        "Waiting for customer feedback"=>"Waiting for customer feedback"
+        "Waiting for customer feedback"=>"Waiting for customer feedback",
+        "Won't fix"=>"Won't fix"
     ];
     /**
      * @ORM\Id()

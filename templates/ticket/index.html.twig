@@ -71,6 +71,9 @@
                 {% if roles['MANAGER'] in user.roles and ticket.agentId is not empty  %}
                     <td>
                         <a href="{{ path('ticket_reassign', {'id': ticket.id}) }}">Re-assign</a>
+                        {% if ticket.wontfix is empty %}
+                            <a href="{{ path('ticket_wontfix', {'id': ticket.id}) }}">Mark as "Won't fix"</a>
+                        {% endif %}
                     </td>
                 {% endif %}
             </tr>
