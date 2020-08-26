@@ -21,6 +21,8 @@ class Ticket
         "Waiting for customer feedback"=>"Waiting for customer feedback",
         "Won't fix"=>"Won't fix"
     ];
+    public const priorities=["low", "medium", "high"];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -299,6 +301,18 @@ class Ticket
         }
         else {
             return true;
+        }
+    }
+
+    public function canView(UserInterface $userInterface, User $user){
+        if(in_array(User::roles['MANAGER'], $userInterface->getRoles())){
+            return true;
+        }elseif(in_array(User::roles['SLA'], $userInterface->getRoles()) and $this->getAgentId() === $user->getId() ){
+            return true;
+        }elseif (in_array(User::roles['FLA'], $userInterface->getRoles()) and !in_array(User::roles['SLA'], $userInterface->getRoles()) and ($this->getAgentId()===null || $this->getAgentId()===$user->getId())){
+            return true;
+        }else{
+            return false;
         }
     }
 

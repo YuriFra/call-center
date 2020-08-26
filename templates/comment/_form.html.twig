@@ -3,7 +3,7 @@
     {{ form_label(form.comment) }}
     {{ form_widget(form.comment) }}
     <br>
-    {% if is_granted('ROLE_AGENT') %}
+    {% if is_granted(roles['FLA']) %}
         {{ form_widget(form.private) }}
         {{ form_label(form.private) }}
     <br>

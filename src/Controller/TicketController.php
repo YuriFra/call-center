@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Comment;
+use App\Entity\DashBoard;
 use App\Entity\Ticket;
 use App\Entity\User;
 use App\Form\CommentType;
@@ -24,17 +25,30 @@ class TicketController extends AbstractController
 {
     /**
      * @Route("/", name="ticket_index", methods={"GET"})
+     * @param TicketRepository $ticketRepository
+     * @param UserInterface $userInterface
+     * @param UserRepository $userRepository
+     * @return Response
      */
     public function index(TicketRepository $ticketRepository, UserInterface $userInterface, UserRepository $userRepository): Response
     {
         $user = $userRepository->findOneBy(['username' => $userInterface->getUsername()]);
-        $tickets=$ticketRepository->showTickets( $userInterface,  $user);
+        $tickets=$ticketRepository->showTickets($userInterface, $user);
+        $dashBoard = new DashBoard($ticketRepository);
+        usort($tickets, function ($ticket1, $ticket2){
+            $pos_a = array_search($ticket1->getPriority(), Ticket::priorities, true);
+            $pos_b = array_search($ticket2->getPriority(), Ticket::priorities, true);
+            return $pos_b-$pos_a;
+        });
+
 
         return $this->render('ticket/index.html.twig', [
             'tickets' => $tickets,
             'user'=>$user,
             'statuses'=>Ticket::status,
             'roles'=>User::roles,
+            'dashboard' => $dashBoard,
+
         ]);
     }
 
@@ -93,8 +107,7 @@ class TicketController extends AbstractController
     {
         $users = $userRepository->findAll();
 
-        //@todo:  vraag koen $request->request->get('premiumAgents')
-        if($request->getMethod()=='POST'){
+        if($request->request->get('premiumAgents')){
             $ticket->setAgentId($request->request->get('premiumAgents'));
             $ticket->setEscalated(true);
             $this->getDoctrine()->getManager()->flush();
@@ -159,6 +172,7 @@ class TicketController extends AbstractController
     {
         $ticket->setStatus(Ticket::status["open"]);
         $ticket->setClosed(NULL);
+        $ticket->setReopened(true);
         $this->getDoctrine()->getManager()->flush();
         return $this->redirectToRoute('ticket_index');
     }
@@ -201,6 +215,7 @@ class TicketController extends AbstractController
             'comment' => $comment,
             'form' => $form->createView(),
             'user' => $user,
+            'roles' => User::roles,
         ]);
     }
 
@@ -248,6 +263,24 @@ class TicketController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/priority", name="ticket_priority", methods={"GET","POST"})
+     * @return Response
+     */
+    public function priority(Request $request, Ticket $ticket): Response
+    {
+        if ($request->request->get('priorities')) {
+            $ticket->setPriority($request->request->get('priorities'));
+           $this->getDoctrine()->getManager()->flush();
+            return $this->redirectToRoute('ticket_index');
+        }
+
+        return $this->render('ticket/priority.html.twig', [
+            'ticket' => $ticket,
+            'priorities'=>Ticket::priorities,
+        ]);
+    }
+
+    /**
      * @Route("/{id}", name="ticket_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Ticket $ticket): Response
@@ -273,5 +306,4 @@ class TicketController extends AbstractController
         $this->getDoctrine()->getManager()->flush();
         return $this->redirectToRoute('ticket_index');
     }
-
 }
