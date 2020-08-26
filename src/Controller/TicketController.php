@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Comment;
+use App\Entity\DashBoard;
 use App\Entity\Ticket;
 use App\Entity\User;
 use App\Form\CommentType;
@@ -24,17 +25,26 @@ class TicketController extends AbstractController
 {
     /**
      * @Route("/", name="ticket_index", methods={"GET"})
+     * @param TicketRepository $ticketRepository
+     * @param UserInterface $userInterface
+     * @param UserRepository $userRepository
+     * @return Response
      */
     public function index(TicketRepository $ticketRepository, UserInterface $userInterface, UserRepository $userRepository): Response
     {
         $user = $userRepository->findOneBy(['username' => $userInterface->getUsername()]);
-        $tickets=$ticketRepository->showTickets( $userInterface,  $user);
+        $tickets=$ticketRepository->showTickets($userInterface, $user);
+        $dashBoard = new DashBoard($ticketRepository);
 
         return $this->render('ticket/index.html.twig', [
             'tickets' => $tickets,
             'user'=>$user,
             'statuses'=>Ticket::status,
             'roles'=>User::roles,
+            'open' => $dashBoard->getCounterOpen(),
+            'closed' => $dashBoard->getCounterClosed(),
+            'reopened' => $dashBoard->getCounterReopened(),
+            'percent' => $dashBoard->getPercent(),
         ]);
     }
 
@@ -177,6 +187,7 @@ class TicketController extends AbstractController
             'comment' => $comment,
             'form' => $form->createView(),
             'user' => $user,
+            'roles' => User::roles,
         ]);
     }
 
@@ -249,5 +260,4 @@ class TicketController extends AbstractController
         $this->getDoctrine()->getManager()->flush();
         return $this->redirectToRoute('ticket_index');
     }
-
 }
