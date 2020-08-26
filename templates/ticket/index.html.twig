@@ -68,10 +68,14 @@
 
                     </td>
                 {% endif %}
-                {% if roles['MANAGER'] in user.roles and ticket.agentId is not empty  %}
+                {% if roles['MANAGER'] in user.roles%}
                     <td>
+                    <a href="{{ path('ticket_priority', {'id': ticket.id}) }}">Adjust priority</a>
+                    {% if ticket.agentId is not empty  %}
+
                         <a href="{{ path('ticket_reassign', {'id': ticket.id}) }}">Re-assign</a>
                     </td>
+                {% endif %}
                 {% endif %}
             </tr>
         {% else %}

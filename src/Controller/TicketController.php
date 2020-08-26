@@ -35,16 +35,20 @@ class TicketController extends AbstractController
         $user = $userRepository->findOneBy(['username' => $userInterface->getUsername()]);
         $tickets=$ticketRepository->showTickets($userInterface, $user);
         $dashBoard = new DashBoard($ticketRepository);
+        usort($tickets, function ($ticket1, $ticket2){
+            $pos_a = array_search($ticket1->getPriority(), Ticket::priorities, true);
+            $pos_b = array_search($ticket2->getPriority(), Ticket::priorities, true);
+            return $pos_b-$pos_a;
+        });
+
 
         return $this->render('ticket/index.html.twig', [
             'tickets' => $tickets,
             'user'=>$user,
             'statuses'=>Ticket::status,
             'roles'=>User::roles,
-            'open' => $dashBoard->getCounterOpen(),
-            'closed' => $dashBoard->getCounterClosed(),
-            'reopened' => $dashBoard->getCounterReopened(),
-            'percent' => $dashBoard->getPercent(),
+            'dashboard' => $dashBoard,
+
         ]);
     }
 
@@ -230,6 +234,24 @@ class TicketController extends AbstractController
         return $this->render('ticket/agentMail.html.twig', [
             'ticket' => $ticket,
              'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/priority", name="ticket_priority", methods={"GET","POST"})
+     * @return Response
+     */
+    public function priority(Request $request, Ticket $ticket): Response
+    {
+        if ($request->request->get('priorities')) {
+            $ticket->setPriority($request->request->get('priorities'));
+           $this->getDoctrine()->getManager()->flush();
+            return $this->redirectToRoute('ticket_index');
+        }
+
+        return $this->render('ticket/priority.html.twig', [
+            'ticket' => $ticket,
+            'priorities'=>Ticket::priorities,
         ]);
     }
 

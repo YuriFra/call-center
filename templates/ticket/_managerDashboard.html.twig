@@ -5,9 +5,9 @@
     <br>
     <h3>Statistics</h3>
     <ul>
-        <li>Open tickets: {{ open }}</li>
-        <li>Closed tickets: {{ closed }}</li>
-        <li>Re-opened tickets: {{ reopened }}</li>
-        <li>% re-opened tickets: {{ percent }}</li>
+        <li>Open tickets: {{ dashboard.getCounterOpen() }}</li>
+        <li>Closed tickets: {{ dashboard.getCounterClosed() }}</li>
+        <li>Re-opened tickets: {{ dashboard.getCounterReopened() }}</li>
+        <li>% re-opened tickets: {{ dashboard.getPercent() }}</li>
     </ul>
 </section>

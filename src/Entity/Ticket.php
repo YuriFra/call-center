@@ -20,11 +20,7 @@ class Ticket
         "closed"=>"closed",
         "Waiting for customer feedback"=>"Waiting for customer feedback"
     ];
-    public const priorities=[
-        "low"=>"low",
-        "medium"=>"medium",
-        "high"=>"high",
-    ];
+    public const priorities=["low", "medium", "high"];
 
     /**
      * @ORM\Id()
