@@ -23,6 +23,7 @@ class UserController extends AbstractController
     {
         return $this->render('user/index.html.twig', [
             'users' => $userRepository->findAll(),
+            'roles'=> User::roles,
         ]);
     }
 
@@ -45,7 +46,9 @@ class UserController extends AbstractController
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        //@todo request method weer niet goed
+        if ($request->getMethod()==="POST") {
+            $user->setRoles(explode(",", $request->request->get('roles')));
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('user_index');
@@ -54,6 +57,7 @@ class UserController extends AbstractController
         return $this->render('user/edit.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
+            'roles'=>User::roles,
         ]);
     }
 

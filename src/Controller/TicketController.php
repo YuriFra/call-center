@@ -29,6 +29,7 @@ class TicketController extends AbstractController
     {
         $user = $userRepository->findOneBy(['username' => $userInterface->getUsername()]);
         $tickets=$ticketRepository->showTickets( $userInterface,  $user);
+
         return $this->render('ticket/index.html.twig', [
             'tickets' => $tickets,
             'user'=>$user,
