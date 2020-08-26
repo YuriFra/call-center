@@ -21,6 +21,9 @@
                 {% if roles['FLA'] in user.roles %}
                 <th>Agent actions</th>
                 {% endif %}
+                {% if roles['MANAGER'] in user.roles %}
+                <th>Manager actions</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
@@ -63,6 +66,11 @@
                             <a href="{{ path('ticket_escalate', {'id': ticket.id}) }}">Escalate</a>
                         {% endif %}
 
+                    </td>
+                {% endif %}
+                {% if roles['MANAGER'] in user.roles and ticket.agentId is not empty  %}
+                    <td>
+                        <a href="{{ path('ticket_reassign', {'id': ticket.id}) }}">Re-assign</a>
                     </td>
                 {% endif %}
             </tr>
