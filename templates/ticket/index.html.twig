@@ -43,7 +43,7 @@
                     {% if ticket.canComment(user) %}
                         <a href="{{ path('ticket_comment', {'id': ticket.id}) }}">add comment</a>
                     {% endif %}
-                    {% if ticket.status is same as(statuses["Waiting for customer feedback"]) %}
+                    {% if (ticket.status is same as(statuses["Waiting for customer feedback"])) and (roles['FLA'] not in user.roles) %}
                     <a href="{{ path('ticket_respond', {'id': ticket.id}) }}">mail agent</a>
                     {% endif %}
                     {% if ticket.canReopen() and ticket.status is same as (statuses["closed"]) %}
