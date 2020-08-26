@@ -40,8 +40,10 @@
                     {% if roles['FLA'] not in user.roles %}
                     <a href="{{ path('ticket_edit', {'id': ticket.id}) }}">edit</a>
                     {% endif %}
+                    {% if  %}
                     <a href="{{ path('ticket_comment', {'id': ticket.id}) }}">add comment</a>
-                    {% if ticket.status is same as(statuses["Waiting for customer feedback"]) %}
+                    {% endif %}
+                    {% if (ticket.status is same as(statuses["Waiting for customer feedback"])) and (roles['FLA'] not in user.roles) %}
                     <a href="{{ path('ticket_respond', {'id': ticket.id}) }}">mail agent</a>
                     {% endif %}
                     {% if ticket.canReopen() and ticket.status is same as (statuses["closed"]) %}

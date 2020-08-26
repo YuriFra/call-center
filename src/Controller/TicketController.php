@@ -153,8 +153,11 @@ class TicketController extends AbstractController
             $comment->setTicket($ticket);
             if (in_array(User::roles["FLA"], $userInterface->getRoles())) {
                 $comment->setPrivate($data->getPrivate());
-
+                if ($ticket->getStatus() === Ticket::status['in progress']) {
+                    $ticket->setStatus(Ticket::status['Waiting for customer feedback']);
+                }
             }
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($comment);
             $entityManager->flush();
@@ -191,10 +194,12 @@ class TicketController extends AbstractController
 
     /**
      * @Route("/{id}/respond", name="ticket_respond", methods={"GET","POST"})
+     * @param Request $request
+     * @param Ticket $ticket
+     * @return Response
      */
     public function respond(Request $request, Ticket $ticket): Response
     {
-
         $form = $this->createForm(ResponseCustomerType::class);
         $form->handleRequest($request);
 
