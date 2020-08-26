@@ -106,6 +106,28 @@ class TicketController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/reassign", name="ticket_reassign", methods={"GET", "POST"})
+     */
+    public function reassign(Ticket $ticket, UserRepository $userRepository, Request $request): Response
+    {
+        $users = $userRepository->findAll();
+        $user = $userRepository->findOneBy(['id' => $ticket->getAgentId()]);
+
+        //@todo:  vraag koen $request->request->get('agents')
+        if($request->getMethod()=='POST'){
+            $ticket->setAgentId($request->request->get('agents'));
+            $this->getDoctrine()->getManager()->flush();
+            return $this->redirectToRoute('ticket_index');
+        }
+        return $this->render('ticket/reassign.html.twig', [
+            'users' => $users,
+            'user' => $user,
+            'roles'=>User::roles,
+            'ticket' => $ticket,
+        ]);
+    }
+
+    /**
      * @Route("/{id}/reopen", name="ticket_reopen", methods={"GET"})
      */
     public function reopen(Ticket $ticket): Response
