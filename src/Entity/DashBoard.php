@@ -10,7 +10,7 @@ class DashBoard
     private int $counterOpen = 0;
     private int $counterClosed = 0;
     private int $counterReopened = 0;
-    private int $percent = 0;
+    private float $percent = 0;
 
     /**
      * DashBoard constructor.
