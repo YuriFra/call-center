@@ -78,6 +78,19 @@ class TicketController extends AbstractController
     }
 
     /**
+     * @Route("/deAssign", name="ticket_deAssign", methods={"GET","POST"})
+     */
+    public function deAssignAll(TicketRepository $ticketRepository): Response
+    {
+        $tickets=$ticketRepository->findAll();
+        foreach ($tickets as $ticket){
+           $ticket->setStatus(Ticket::status['open']);
+           $this->getDoctrine()->getManager()->flush();
+        }
+        return $this->redirectToRoute('ticket_index');
+    }
+
+    /**
      * @Route("/{id}", name="ticket_show", methods={"GET"})
      */
     public function show(Ticket $ticket): Response
