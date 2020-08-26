@@ -1,4 +1,5 @@
 security:
+
     encoders:
         App\Entity\Customer:
             algorithm: auto
@@ -41,4 +42,7 @@ security:
     access_control:
         #
          - { path: ^/ticket, roles: ROLE_USER }
+         - { path: ^/user, roles: ROLE_MANAGER }
         # - { path: ^/profile, roles: ROLE_USER }
+
+    access_denied_url: /

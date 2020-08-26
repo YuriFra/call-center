@@ -3,7 +3,7 @@
 {% block title %}Ticket index{% endblock %}
 
 {% block body %}
-    <h1>Ticket index</h1>
+    <h1>Overview Tickets</h1>
 
     <table class="table">
         <thead>
@@ -75,5 +75,8 @@
     </table>
     {% if roles['FLA'] not in user.roles %}
     <a href="{{ path('ticket_new') }}">Create new</a>
+    {% endif %}
+    {% if roles['MANAGER'] in user.roles %}
+    {{ include('ticket/_managerDashboard.html.twig') }}
     {% endif %}
 {% endblock %}

@@ -29,7 +29,9 @@ class TicketController extends AbstractController
     {
         $user = $userRepository->findOneBy(['username' => $userInterface->getUsername()]);
         $allTickets=$ticketRepository->findAll();
-       if(in_array(User::roles['SLA'], $userInterface->getRoles())){
+        if(in_array(User::roles['MANAGER'], $userInterface->getRoles())){
+            $tickets=$allTickets;
+        } elseif(in_array(User::roles['SLA'], $userInterface->getRoles())){
             $tickets=[];
             foreach ($allTickets as $ticket) {
                 if ($ticket->getAgentId() === $user->getId()) {
