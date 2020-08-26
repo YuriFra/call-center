@@ -12,7 +12,9 @@
                 <th>Title</th>
                 <th>Message</th>
                 <th>Status</th>
+                {% if roles['FLA'] in user.roles %}
                 <th>Priority</th>
+                {% endif %}
                 <th>Posted</th>
                 <th>Agent</th>
                 <th>actions</th>
@@ -28,13 +30,19 @@
                 <td>{{ ticket.title }}</td>
                 <td>{{ ticket.message }}</td>
                 <td>{{ ticket.status }}</td>
+                {% if roles['FLA'] in user.roles %}
                 <td>{{ ticket.priority }}</td>
+                {% endif %}
                 <td>{{ ticket.posted ? ticket.posted|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ ticket.agentId }}</td>
                 <td>
                     <a href="{{ path('ticket_show', {'id': ticket.id}) }}">show</a>
+                    {% if roles['FLA'] not in user.roles %}
                     <a href="{{ path('ticket_edit', {'id': ticket.id}) }}">edit</a>
-                    <a href="{{ path('ticket_comment', {'id': ticket.id}) }}">add comment</a>
+                    {% endif %}
+                    {% if ticket.canComment(user) %}
+                        <a href="{{ path('ticket_comment', {'id': ticket.id}) }}">add comment</a>
+                    {% endif %}
                     {% if ticket.status is same as(statuses["Waiting for customer feedback"]) %}
                     <a href="{{ path('ticket_respond', {'id': ticket.id}) }}">mail agent</a>
                     {% endif %}
@@ -45,8 +53,10 @@
 
                 {% if roles['FLA'] in user.roles %}
                     <td>
+                        {% if ticket.agentId == NULL %}
                         <a href="{{  path('ticket_assign', {'id': ticket.id,'user_id': user.id}) }}">Assign myself</a>
-                        {% if ticket.status != statuses["closed"] and ticket.comments|length > 0%}
+                        {% endif %}
+                        {% if ticket.status != statuses["closed"] and ticket.canClose() %}
                             <a href="{{  path('ticket_close', {'id': ticket.id}) }}">Close ticket</a>
                         {% endif %}
                         {% if ticket.agentId != NULL %}
@@ -63,6 +73,7 @@
         {% endfor %}
         </tbody>
     </table>
-
+    {% if roles['FLA'] not in user.roles %}
     <a href="{{ path('ticket_new') }}">Create new</a>
+    {% endif %}
 {% endblock %}

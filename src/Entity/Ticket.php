@@ -279,4 +279,24 @@ class Ticket
             return false;
         }
     }
+
+    public function canClose(): bool
+    {
+        foreach($this->comments as $comment){
+            if ($this->getUser()->getId() !== $comment->getUser()->getId()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function canComment(User $user): bool
+    {
+        if (in_array(User::roles["FLA"], $user->getRoles(), true) && $this->getAgentId() == NULL){
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
 }
