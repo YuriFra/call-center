@@ -148,6 +148,7 @@ class TicketController extends AbstractController
     {
         $ticket->setStatus(Ticket::status["open"]);
         $ticket->setClosed(NULL);
+        $ticket->setReopened(true);
         $this->getDoctrine()->getManager()->flush();
         return $this->redirectToRoute('ticket_index');
     }
