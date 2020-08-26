@@ -13,6 +13,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Ticket
 {
+    public const status=[
+        "in progress"=>"in progress",
+        "open"=>"open",
+        "closed"=>"closed",
+        "Waiting for customer feedback"=>"Waiting for customer feedback"
+    ];
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -84,7 +90,7 @@ class Ticket
     public function __construct()
     {
         $this->comments = new ArrayCollection();
-        $this->setStatus("open");
+        $this->setStatus(self::status['open']);
         $this->setPriority("low");
         $this->setPosted(new \DateTime());
         $this->setEscalated(false);

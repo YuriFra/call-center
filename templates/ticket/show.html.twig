@@ -41,7 +41,7 @@
                 <p>User: {{ comment.user.username }}</p>
                 <p>Comment: {{ comment.comment }}</p>
             </li>
-        {% elseif is_granted('ROLE_AGENT') %}
+        {% elseif is_granted(roles['FLA']) %}
             <li>
                 <p>User: {{ comment.user.username }}</p>
                 <p>Roles: {{ comment.user.roles|join }}</p>
