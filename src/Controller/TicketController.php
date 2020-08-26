@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Comment;
+use App\Entity\DashBoard;
 use App\Entity\Ticket;
 use App\Entity\User;
 use App\Form\CommentType;
@@ -24,17 +25,26 @@ class TicketController extends AbstractController
 {
     /**
      * @Route("/", name="ticket_index", methods={"GET"})
+     * @param TicketRepository $ticketRepository
+     * @param UserInterface $userInterface
+     * @param UserRepository $userRepository
+     * @return Response
      */
     public function index(TicketRepository $ticketRepository, UserInterface $userInterface, UserRepository $userRepository): Response
     {
         $user = $userRepository->findOneBy(['username' => $userInterface->getUsername()]);
-        $tickets=$ticketRepository->showTickets( $userInterface,  $user);
+        $tickets=$ticketRepository->showTickets($userInterface, $user);
+        $dashBoard = new DashBoard($ticketRepository);
 
         return $this->render('ticket/index.html.twig', [
             'tickets' => $tickets,
             'user'=>$user,
             'statuses'=>Ticket::status,
             'roles'=>User::roles,
+            'open' => $dashBoard->getCounterOpen(),
+            'closed' => $dashBoard->getCounterClosed(),
+            'reopened' => $dashBoard->getCounterReopened(),
+            'percent' => $dashBoard->getPercent(),
         ]);
     }
 
@@ -106,6 +116,28 @@ class TicketController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/reassign", name="ticket_reassign", methods={"GET", "POST"})
+     */
+    public function reassign(Ticket $ticket, UserRepository $userRepository, Request $request): Response
+    {
+        $users = $userRepository->findAll();
+        $user = $userRepository->findOneBy(['id' => $ticket->getAgentId()]);
+
+        //@todo:  vraag koen $request->request->get('agents')
+        if($request->getMethod()=='POST'){
+            $ticket->setAgentId($request->request->get('agents'));
+            $this->getDoctrine()->getManager()->flush();
+            return $this->redirectToRoute('ticket_index');
+        }
+        return $this->render('ticket/reassign.html.twig', [
+            'users' => $users,
+            'user' => $user,
+            'roles'=>User::roles,
+            'ticket' => $ticket,
+        ]);
+    }
+
+    /**
      * @Route("/{id}/reopen", name="ticket_reopen", methods={"GET"})
      */
     public function reopen(Ticket $ticket): Response
@@ -154,6 +186,7 @@ class TicketController extends AbstractController
             'comment' => $comment,
             'form' => $form->createView(),
             'user' => $user,
+            'roles' => User::roles,
         ]);
     }
 
@@ -226,5 +259,4 @@ class TicketController extends AbstractController
         $this->getDoctrine()->getManager()->flush();
         return $this->redirectToRoute('ticket_index');
     }
-
 }
