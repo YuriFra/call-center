@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Ticket;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method Ticket|null find($id, $lockMode = null, $lockVersion = null)
@@ -47,4 +49,35 @@ class TicketRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function showTickets(UserInterface $userInterface, User $user){
+
+        $allTickets= $this->findAll();
+
+       //@todo: switch koen
+        if(in_array(User::roles['MANAGER'], $userInterface->getRoles())){
+            $tickets=$allTickets;
+        } elseif(in_array(User::roles['SLA'], $userInterface->getRoles())){
+            $tickets=[];
+            foreach ($allTickets as $ticket) {
+                if ($ticket->getAgentId() === $user->getId()) {
+                    $tickets[] = $ticket;
+                }
+            }
+        }  elseif (in_array(User::roles['FLA'], $userInterface->getRoles())) {
+            $tickets=[];
+            foreach ($allTickets as $ticket){
+                if($ticket->getAgentId()===null || $ticket->getAgentId()===$user->getId()){
+                    $tickets[]=$ticket;
+                }
+            }
+
+        } else{
+
+            $tickets = $this->findBy(['user' => $user->getId()]);
+        }
+
+        return $tickets;
+
+    }
 }
