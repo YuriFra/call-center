@@ -140,8 +140,7 @@ class TicketController extends AbstractController
         $users = $userRepository->findAll();
         $user = $userRepository->findOneBy(['id' => $ticket->getAgentId()]);
 
-        //@todo:  vraag koen $request->request->get('agents')
-        if($request->getMethod()=='POST'){
+        if($request->request->get('agents')){
             $ticket->setAgentId($request->request->get('agents'));
             $this->getDoctrine()->getManager()->flush();
             return $this->redirectToRoute('ticket_index');
