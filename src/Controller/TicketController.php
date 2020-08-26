@@ -155,6 +155,30 @@ class TicketController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/wontfix", name="ticket_wontfix", methods={"GET", "POST"})
+     */
+    public function wontfix(Ticket $ticket, Request $request, userInterface $userInterface, userRepository $userRepository): Response
+    {
+        if($request->request->get('wontfixReason')){
+            $ticket->setStatus(Ticket::status["Won't fix"]);
+            $ticket->setClosed(new DateTime());
+            $ticket->setWontFix($request->request->get('wontfixReason'));
+            $comment = new Comment();
+            $user = $userRepository->findOneBy(['username'=> $userInterface->getUsername()]);
+            $comment->setComment($request->request->get('wontfixReason'));
+            $comment->setUser($user);
+            $comment->setTicket($ticket);
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($comment);
+            $entityManager->flush();
+            return $this->redirectToRoute('ticket_index');
+        }
+        return $this->render('ticket/wontfix.html.twig', [
+            'ticket' => $ticket,
+        ]);
+    }
+
+    /**
      * @Route("/{id}/reopen", name="ticket_reopen", methods={"GET"})
      */
     public function reopen(Ticket $ticket): Response
