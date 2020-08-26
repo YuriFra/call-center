@@ -93,6 +93,5 @@ class DashBoard
         } else {
             $this->percent = ($this->counterReopened * 100) / $this->counterClosed;
         }
-
     }
 }
