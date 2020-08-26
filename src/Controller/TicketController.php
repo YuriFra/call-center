@@ -93,8 +93,7 @@ class TicketController extends AbstractController
     {
         $users = $userRepository->findAll();
 
-        //@todo:  vraag koen $request->request->get('premiumAgents')
-        if($request->getMethod()=='POST'){
+        if($request->request->get('premiumAgents')){
             $ticket->setAgentId($request->request->get('premiumAgents'));
             $ticket->setEscalated(true);
             $this->getDoctrine()->getManager()->flush();

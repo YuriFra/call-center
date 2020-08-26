@@ -51,33 +51,16 @@ class TicketRepository extends ServiceEntityRepository
     */
 
     public function showTickets(UserInterface $userInterface, User $user){
-
         $allTickets= $this->findAll();
-
-       //@todo: switch koen
-        if(in_array(User::roles['MANAGER'], $userInterface->getRoles())){
-            $tickets=$allTickets;
-        } elseif(in_array(User::roles['SLA'], $userInterface->getRoles())){
-            $tickets=[];
-            foreach ($allTickets as $ticket) {
-                if ($ticket->getAgentId() === $user->getId()) {
-                    $tickets[] = $ticket;
-                }
+        $tickets=[];
+        foreach ($allTickets as $ticket) {
+            if ($ticket->canView($userInterface,$user)) {
+                $tickets[] = $ticket;
             }
-        }  elseif (in_array(User::roles['FLA'], $userInterface->getRoles())) {
-            $tickets=[];
-            foreach ($allTickets as $ticket){
-                if($ticket->getAgentId()===null || $ticket->getAgentId()===$user->getId()){
-                    $tickets[]=$ticket;
-                }
-            }
-
-        } else{
-
-            $tickets = $this->findBy(['user' => $user->getId()]);
         }
-
+        if(empty($tickets)){
+                $tickets = $this->findBy(['user' => $user->getId()]);
+        }
         return $tickets;
-
     }
 }
