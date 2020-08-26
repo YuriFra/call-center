@@ -33,27 +33,11 @@ class DashBoard
     }
 
     /**
-     * @param int $counterOpen
-     */
-    public function setCounterOpen(int $counterOpen): void
-    {
-        $this->counterOpen = $counterOpen;
-    }
-
-    /**
      * @return int
      */
     public function getCounterClosed(): int
     {
         return $this->counterClosed;
-    }
-
-    /**
-     * @param int $counterClosed
-     */
-    public function setCounterClosed(int $counterClosed): void
-    {
-        $this->counterClosed = $counterClosed;
     }
 
     /**
@@ -65,27 +49,11 @@ class DashBoard
     }
 
     /**
-     * @param int $counterReopened
-     */
-    public function setCounterReopened(int $counterReopened): void
-    {
-        $this->counterReopened = $counterReopened;
-    }
-
-    /**
      * @return int
      */
     public function getPercent(): int
     {
         return $this->percent;
-    }
-
-    /**
-     * @param int $percent
-     */
-    public function setPercent(int $percent): void
-    {
-        $this->percent = $percent;
     }
 
     private function countOpen(TicketRepository $ticketRepository): void
@@ -120,6 +88,11 @@ class DashBoard
 
     private function countPercent(): void
     {
-        $this->percent = ($this->counterReopened * 100) / $this->counterClosed;
+        if ($this->counterClosed === 0) {
+            $this->percent = 0;
+        } else {
+            $this->percent = ($this->counterReopened * 100) / $this->counterClosed;
+        }
+
     }
 }
