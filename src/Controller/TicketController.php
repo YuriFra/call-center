@@ -28,16 +28,24 @@ class TicketController extends AbstractController
     public function index(TicketRepository $ticketRepository, UserInterface $userInterface, UserRepository $userRepository): Response
     {
         $user = $userRepository->findOneBy(['username' => $userInterface->getUsername()]);
-        if (in_array(User::roles['FLA'], $userInterface->getRoles())) {
-            $allTickets=$ticketRepository->findAll();
+        $allTickets=$ticketRepository->findAll();
+       if(in_array(User::roles['SLA'], $userInterface->getRoles())){
             $tickets=[];
-            foreach ($allTickets as $ticket){
-                if($ticket->getAgentId()===null || $ticket->getAgentId()===$user->getId()){
-                    $tickets[]=$ticket;
+            foreach ($allTickets as $ticket) {
+                if ($ticket->getAgentId() === $user->getId()) {
+                    $tickets[] = $ticket;
                 }
             }
+        }  elseif (in_array(User::roles['FLA'], $userInterface->getRoles())) {
 
-        } else {
+        $tickets=[];
+        foreach ($allTickets as $ticket){
+            if($ticket->getAgentId()===null || $ticket->getAgentId()===$user->getId()){
+                $tickets[]=$ticket;
+            }
+        }
+
+    } else{
 
             $tickets = $ticketRepository->findBy(['user' => $user->getId()]);
         }
