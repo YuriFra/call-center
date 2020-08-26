@@ -64,7 +64,7 @@
                         {% if ticket.status != statuses["closed"] and ticket.canClose() %}
                             <a href="{{  path('ticket_close', {'id': ticket.id}) }}">Close ticket</a>
                         {% endif %}
-                        {% if ticket.agentId != NULL %}
+                        {% if ticket.agentId != NULL and  ticket.status != statuses["closed"]  %}
                             <a href="{{ path('ticket_escalate', {'id': ticket.id}) }}">Escalate</a>
                         {% endif %}
 

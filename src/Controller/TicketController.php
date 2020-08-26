@@ -85,6 +85,7 @@ class TicketController extends AbstractController
         $tickets=$ticketRepository->findAll();
         foreach ($tickets as $ticket){
            $ticket->setStatus(Ticket::status['open']);
+           $ticket->setAgentId(NULL);
            $this->getDoctrine()->getManager()->flush();
         }
         return $this->redirectToRoute('ticket_index');
@@ -116,10 +117,10 @@ class TicketController extends AbstractController
     /**
      * @Route("/{id}/escalate", name="ticket_escalate", methods={"GET", "POST"})
      */
-    public function escalate(Ticket $ticket, UserRepository $userRepository, Request $request): Response
+    public function escalate(Ticket $ticket, UserRepository $userRepository, Request $request, UserInterface $userInterface): Response
     {
         $users = $userRepository->findAll();
-
+        $loggedInUser=$userRepository->findOneBy(["username"=>$userInterface->getUsername()]);
         if($request->request->get('premiumAgents')){
             $ticket->setAgentId($request->request->get('premiumAgents'));
             $ticket->setEscalated(true);
@@ -129,6 +130,7 @@ class TicketController extends AbstractController
         return $this->render('ticket/escalate.html.twig', [
             'users' => $users,
             'roles'=>User::roles,
+            'loggedInUser'=>$loggedInUser
         ]);
     }
 
@@ -211,6 +213,7 @@ class TicketController extends AbstractController
             $comment->setTicket($ticket);
             if (in_array(User::roles["FLA"], $userInterface->getRoles())) {
                 $comment->setPrivate($data->getPrivate());
+
                 if ($ticket->getStatus() === Ticket::status['in progress'] && $data->getPrivate() === false) {
                     $ticket->setStatus(Ticket::status['Waiting for customer feedback']);
                 }

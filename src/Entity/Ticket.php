@@ -286,11 +286,16 @@ class Ticket
 
     public function canClose(): bool
     {
+        if($this->status==Ticket::status['Won\'t fix']){
+            return false;
+        }
+
         foreach($this->comments as $comment){
             if ($this->getUser()->getId() !== $comment->getUser()->getId()){
                 return true;
             }
         }
+
         return false;
     }
 
