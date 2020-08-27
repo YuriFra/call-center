@@ -17,8 +17,8 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between">
                 <p class="align-middle mb-0">Ticket: <span class="ticket-id">#{{ ticket.id }}</span></p>
-                <p class="align-middle mb-0">Priority: {{ ticket.priority }}</span></p>
-                <p class="align-middle mb-0">Status: <span class="badge badge-status">{{ ticket.status }}</span></p>
+                <p class="align-middle mb-0">Priority: <span class="badge badge-status pilletje">{{ ticket.priority }}</span></p>
+                <p class="align-middle mb-0">Status: <span class="badge badge-status pilletje">{{ ticket.status }}</span></p>
             </div>
             <div class="card-body py-5">
                 <h4 class="card-title">{{ ticket.title }}</h4>
@@ -55,5 +55,5 @@
         </ul>
         <br>
     </section>
-
+    <script src="{{ app.request.baseUrl }}/js/scriptBadges.js"></script>
 {% endblock %}

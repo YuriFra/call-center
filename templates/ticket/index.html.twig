@@ -36,7 +36,7 @@
                             </div>
                             <div class="mb-2" >
                                 <span>State:</span>
-                                <span  class="badge pilletje" id="pilletje">{{ ticket.status }} </span>
+                                <span  class="badge pilletje" id="pilletje">{{ ticket.status }}</span>
                                 {% if roles['FLA'] in user.roles %}
                                     <span> Priority-level:</span>
                                     <span class="badge pilletje" id="pilletje">{{ ticket.priority }}</span>
@@ -130,6 +130,9 @@
     {% if roles['MANAGER'] in user.roles %}
         <section id="dashboard">
             {{ include('ticket/_managerDashboard.html.twig') }}
+
         </section>
     {% endif %}
+    <script src="{{ app.request.baseUrl }}/js/scriptBadges.js"></script>
+
 {% endblock %}

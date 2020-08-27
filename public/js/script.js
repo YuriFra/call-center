@@ -40,3 +40,8 @@ function countUp2(maxNum, id, timeInterval) {
     }, timeInterval);
 }
 countUp2(185, 'number3', 100);
+
+let badges =Array.from(document.getElementsByClassName('pilletje'));
+badges.forEach(badge, () =>{
+    console.log(badge.innerHTML);
+})
