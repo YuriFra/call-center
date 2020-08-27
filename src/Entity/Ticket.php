@@ -3,15 +3,26 @@
 namespace App\Entity;
 
 use App\Repository\TicketRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=TicketRepository::class)
  */
 class Ticket
 {
+    public const status=[
+        "in progress"=>"in progress",
+        "open"=>"open",
+        "closed"=>"closed",
+        "Waiting for customer feedback"=>"Waiting for customer feedback",
+        "Won't fix"=>"Won't fix"
+    ];
+    public const priorities=["low", "medium", "high"];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -58,7 +69,7 @@ class Ticket
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $agent_id;
+    private $agentId;
 
     /**
      * @ORM\Column(type="boolean")
@@ -73,12 +84,17 @@ class Ticket
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $wont_fix;
+    private $wontFix;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $closed;
 
     public function __construct()
     {
         $this->comments = new ArrayCollection();
-        $this->setStatus("open");
+        $this->setStatus(self::status['open']);
         $this->setPriority("low");
         $this->setPosted(new \DateTime());
         $this->setEscalated(false);
@@ -195,12 +211,12 @@ class Ticket
 
     public function getAgentId(): ?int
     {
-        return $this->agent_id;
+        return $this->agentId;
     }
 
-    public function setAgentId(?int $agent_id): self
+    public function setAgentId(?int $agentId): self
     {
-        $this->agent_id = $agent_id;
+        $this->agentId = $agentId;
 
         return $this;
     }
@@ -231,13 +247,81 @@ class Ticket
 
     public function getWontFix(): ?string
     {
-        return $this->wont_fix;
+        return $this->wontFix;
     }
 
-    public function setWontFix(?string $wont_fix): self
+    public function setWontFix(?string $wontFix): self
     {
-        $this->wont_fix = $wont_fix;
+        $this->wontFix = $wontFix;
 
         return $this;
     }
+
+    public function getClosed(): ?\DateTimeInterface
+    {
+        return $this->closed;
+    }
+
+    public function setClosed(?\DateTimeInterface $closed): self
+    {
+        $this->closed = $closed;
+
+        return $this;
+    }
+
+    public function canReopen(): bool
+    {
+        $closedTicket = $this->closed;
+        if($closedTicket == NULL){
+            return false;
+        }
+        $interval = $closedTicket->diff(new DateTime());
+        if($interval->format('%i') >= 1){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public function canClose(): bool
+    {
+        if($this->status==Ticket::status['Won\'t fix']){
+            return false;
+        }
+
+        foreach($this->comments as $comment){
+            if ($this->getUser()->getId() !== $comment->getUser()->getId()){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function canComment(User $user): bool
+    {
+        if (in_array(User::roles["FLA"], $user->getRoles(), true) && $this->getAgentId() == NULL){
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    public function canView(UserInterface $userInterface, User $user){
+        if(in_array(User::roles['MANAGER'], $userInterface->getRoles())){
+            return true;
+        }elseif(in_array(User::roles['SLA'], $userInterface->getRoles()) and $this->getAgentId() === $user->getId() ){
+            return true;
+        }elseif (in_array(User::roles['FLA'], $userInterface->getRoles()) and !in_array(User::roles['SLA'], $userInterface->getRoles()) and ($this->getAgentId()===null || $this->getAgentId()===$user->getId())){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
+
+
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Ticket;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
@@ -22,6 +23,7 @@ class UserController extends AbstractController
     {
         return $this->render('user/index.html.twig', [
             'users' => $userRepository->findAll(),
+            'roles'=> User::roles,
         ]);
     }
 
@@ -44,7 +46,9 @@ class UserController extends AbstractController
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+
+        if ($request->request->get('roles')) {
+            $user->setRoles(explode(",", $request->request->get('roles')));
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('user_index');
@@ -53,6 +57,7 @@ class UserController extends AbstractController
         return $this->render('user/edit.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
+            'roles'=>User::roles,
         ]);
     }
 

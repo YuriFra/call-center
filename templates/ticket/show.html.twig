@@ -33,10 +33,27 @@
             </tr>
         </tbody>
     </table>
-
     <a href="{{ path('ticket_index') }}">back to list</a>
-
     <a href="{{ path('ticket_edit', {'id': ticket.id}) }}">edit</a>
 
     {{ include('ticket/_delete_form.html.twig') }}
+    <br>
+    <h3>Comments</h3>
+    {% for comment in ticket.comments %}
+        {% if comment.private == false %}
+            <li>
+                <p>User: {{ comment.user.username }}</p>
+                <p>Comment: {{ comment.comment }}</p>
+            </li>
+        {% elseif is_granted(roles['FLA']) %}
+            <li>
+                <p>User: {{ comment.user.username }}</p>
+                <p>Roles: {{ comment.user.roles|join }}</p>
+                <p>Comment: {{ comment.comment }}</p>
+                <p>Private: {{ comment.private }}</p>
+            </li>
+        {% endif %}
+    {% endfor %}
+    <br>
+
 {% endblock %}

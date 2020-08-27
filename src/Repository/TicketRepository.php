@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Ticket;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method Ticket|null find($id, $lockMode = null, $lockVersion = null)
@@ -47,4 +49,20 @@ class TicketRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function showTickets(UserInterface $userInterface, User $user){
+        $allTickets= $this->findAll();
+        $tickets=[];
+        foreach ($allTickets as $ticket) {
+            if ($ticket->canView($userInterface,$user)) {
+                $tickets[] = $ticket;
+            }
+        }
+        if(empty($tickets)){
+                $tickets = $this->findBy(['user' => $user->getId()]);
+        }
+        return $tickets;
+    }
+
+
 }
