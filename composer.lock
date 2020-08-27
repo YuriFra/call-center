@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "741440e0f91cf9bb0b77168f05870b02",
+    "content-hash": "3ae90e63fa1e1d03fd59a9ab6947b8ce",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -394,7 +394,6 @@
                     "type": "tidelift"
                 }
             ],
-
             "time": "2020-06-05T16:59:53+00:00"
         },
         {
@@ -595,7 +594,20 @@
                 "orm",
                 "persistence"
             ],
-
+            "funding": [
+                {
+                    "url": "https://www.doctrine-project.org/sponsorship.html",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://www.patreon.com/phpdoctrine",
+                    "type": "patreon"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/doctrine%2Fdoctrine-bundle",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-08-25T10:57:15+00:00"
         },
         {
@@ -1293,7 +1305,20 @@
                 "orm",
                 "persistence"
             ],
-
+            "funding": [
+                {
+                    "url": "https://www.doctrine-project.org/sponsorship.html",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://www.patreon.com/phpdoctrine",
+                    "type": "patreon"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/doctrine%2Fpersistence",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-05-12T19:32:44+00:00"
         },
         {
@@ -1668,14 +1693,12 @@
                 "events",
                 "laminas"
             ],
-
             "funding": [
                 {
                     "url": "https://funding.communitybridge.org/projects/laminas-project",
                     "type": "community_bridge"
                 }
             ],
-
             "time": "2020-08-25T11:10:44+00:00"
         },
         {
@@ -2297,7 +2320,6 @@
         },
         {
             "name": "sensio/framework-extra-bundle",
-
             "version": "v5.6.1",
             "source": {
                 "type": "git",
@@ -2308,18 +2330,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/sensiolabs/SensioFrameworkExtraBundle/zipball/430d14c01836b77c28092883d195a43ce413ee32",
                 "reference": "430d14c01836b77c28092883d195a43ce413ee32",
-
-            "version": "v5.6.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sensiolabs/SensioFrameworkExtraBundle.git",
-                "reference": "ced361d17ef6a52af90708e081c5ad900dc45a11"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/SensioFrameworkExtraBundle/zipball/ced361d17ef6a52af90708e081c5ad900dc45a11",
-                "reference": "ced361d17ef6a52af90708e081c5ad900dc45a11",
->>>>>>> master
                 "shasum": ""
             },
             "require": {
@@ -2383,7 +2393,6 @@
                 "controllers"
             ],
             "time": "2020-08-25T19:10:18+00:00"
-
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -3695,7 +3704,6 @@
                 }
             ],
             "description": "Composer plugin for Symfony",
-
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3710,7 +3718,6 @@
                     "type": "tidelift"
                 }
             ],
-
             "time": "2020-08-25T08:51:56+00:00"
         },
         {
@@ -7632,14 +7639,12 @@
                 "safe writer",
                 "webimpress"
             ],
-
             "funding": [
                 {
                     "url": "https://github.com/michalbundyra",
                     "type": "github"
                 }
             ],
-
             "time": "2020-08-25T07:21:11+00:00"
         },
         {
@@ -8289,7 +8294,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.2.5",
+        "php": ">=7.4",
         "ext-ctype": "*",
         "ext-iconv": "*"
     },

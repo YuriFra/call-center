@@ -1,0 +1,152 @@
+body {
+    font-family: 'Nunito', sans-serif;
+}
+
+.numbers {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.card-deck {
+    border:0;
+}
+div.card {
+    text-align: center;
+    border: 0;
+}
+.card-title{
+    color: #88bbb7;
+    font-family: 'Oldenburg', cursive;
+}
+p.card-text{
+    font-family: 'Abril Fatface', cursive;
+    font-size: 50px;
+    color: #db9a9a;
+}
+.bodytext{
+    color: #AAAAAA;
+}
+#work{
+    margin-top: 50px;
+    font-family: 'Nunito', sans-serif;
+}
+.parallax {
+    background-image: url("grace.jpg");
+    filter: grayscale(100%);
+    min-height: 500px;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.woman {
+    margin-top: 60px;
+    margin-bottom: 60px;
+}
+.card-text{
+    font-family: 'Nunito', sans-serif;
+    color: #AAAAAA;
+}
+.feminist{
+    filter: grayscale(100%);
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    align-content: end;
+}
+.navbar {
+    background-color: #db9a9a;
+    padding: 20px 20px 20px 40px;
+}
+.page-footer {
+    background-color: #88bbb7;
+    font-family: 'Oldenburg', cursive;
+    color: whitesmoke;
+}
+#signup {
+    background-color: #FF3636;
+    font-family: 'Oldenburg', cursive;
+    color: #F5F5F5;
+    margin-right: 20px;
+}
+#signin {
+    background-color: #B3CAD0;
+    font-family: 'Oldenburg', cursive;
+    margin-right: 10px;
+}
+#signin:hover {
+    background-color: #88bbb7;
+    color: #f1f2f3;
+}
+h1{
+    font-family: 'Oldenburg', cursive;
+    color: #FF3636;
+}
+
+h2{
+    font-family: 'Oldenburg', cursive;
+    color: #FF3636;
+}
+h5{
+    color: #B3CAD0;
+}
+#registerform {
+    background-color: #B3CAD0;
+    box-shadow: 0px 0px 55px -6px rgba(0,0,0,0.4);
+    border-radius: 20px;
+    padding: 60px;
+    margin-top: 100px;
+    width: 400px;
+    height: 450px;
+    align-content: center;
+    text-align: center;
+}
+#registerintro {
+    margin-top: 200px;
+    padding-right: 40px;
+    text-align: right;
+}
+.quote {
+    font-family: 'Abril Fatface', cursive;
+    width: 800px;
+    padding-left: 100px;
+    padding-top: 80px;
+    text-align: right;
+    font-size: 30px;
+    color: #f1f2f3;
+}
+#registerbtn, #signinbutton {
+    background-color: #FF3636;
+    width: 100%;
+    font-family: 'Oldenburg', cursive;
+    color: #F5F5F5;
+}
+#registerbtn:hover,
+#signinbutton:hover,
+#signup:hover{
+    background-color: #c14343
+}
+#registerwidgets {
+    width: 100%;
+}
+#registration_form_username,
+#registration_form_email,
+#registration_form_plainPassword,
+#inputPassword, #inputUsername{
+    width: 100%;
+    border: 0;
+    border-radius: 2px;
+    margin-bottom: 20px;
+    height: 30px;
+}
+#equity {
+    text-align: left;
+}
+.title {
+    font-family: 'Abril Fatface', cursive;
+    text-align: center;
+}
+.subtitle {
+    font-size: 60px;
+    color: #db9a9a;
+}
