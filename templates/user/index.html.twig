@@ -55,7 +55,9 @@
                 <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
                 <td>
                     <a href="{{ path('user_show', {'id': user.id}) }}">show</a>
+                    {% if roles['FLA'] in user.roles %}
                     <a href="{{ path('user_edit', {'id': user.id}) }}">edit</a>
+                        {% endif %}
                 </td>
             </tr>
             {% endif %}

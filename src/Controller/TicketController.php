@@ -208,17 +208,7 @@ class TicketController extends AbstractController
         $user = $userRepository->findOneBy(['username' => $userInterface->getUsername()]);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $comment->setUser($user);
-            $comment->setTicket($ticket);
-            if (in_array(User::roles["FLA"], $userInterface->getRoles())) {
-                $comment->setPrivate($data->getPrivate());
-
-                if ($ticket->getStatus() === Ticket::status['in progress'] && $data->getPrivate() === false) {
-                    $ticket->setStatus(Ticket::status['Waiting for customer feedback']);
-                }
-            }
-
+            $comment->setCommentProperties($form,$user,$ticket,$userInterface);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($comment);
             $entityManager->flush();

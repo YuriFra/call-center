@@ -2,8 +2,11 @@
 
 namespace App\Entity;
 
+use App\Form\CommentType;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=CommentRepository::class)
@@ -98,5 +101,22 @@ class Comment
         $this->ticket = $ticket;
 
         return $this;
+    }
+
+
+    //@todo refactor
+    public function setCommentProperties(Form $form, User $user, Ticket $ticket, UserInterface $userInterface): void
+    {
+        $data = $form->getData();
+        $this->setUser($user);
+        $this->setTicket($ticket);
+
+        if (in_array(User::roles["FLA"], $userInterface->getRoles())) {
+            $this->setPrivate($data->getPrivate());
+
+            if ($ticket->getStatus() === Ticket::status['in progress'] && $data->getPrivate() === false) {
+                $ticket->setStatus(Ticket::status['Waiting for customer feedback']);
+            }
+        }
     }
 }

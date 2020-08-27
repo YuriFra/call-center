@@ -46,8 +46,8 @@ class UserController extends AbstractController
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
-        //@todo request method weer niet goed
-        if ($request->getMethod()==="POST") {
+
+        if ($request->request->get('roles')) {
             $user->setRoles(explode(",", $request->request->get('roles')));
             $this->getDoctrine()->getManager()->flush();
 
