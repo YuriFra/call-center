@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to Grace Ombudsservice</title>
+    <link rel="stylesheet" href="{{ app.request.baseUrl }}/css/style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Alata&family=Nunito&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Upright:wght@500&family=Oldenburg&display=swap" rel="stylesheet">
+</head>
+
+<nav class="navbar navbar-light justify-content-between">
+    <a href="{{ path('homepage')}}" class="navbar-brand">
+        <img src="https://i.ibb.co/nLCPYRd/grace-logo.png" alt="grace-logo" width="125" class="d-inline-block align-middle mr-2">
+    </a>
+    <form class="form-inline">
+        <a href="{{ path('app_login') }}"class="btn my-2 my-sm-0" type="submit" id="signin">Sign in</a>
+        <a  href="{{ path('app_register')}}" class="btn my-2 my-sm-0" type="submit" id="signup">Sign up</a>
+    </form>
+</nav>
+<body>
+<div class="parallax">
+    <div class="quote">
+        “One study found that women with blond hair earn 7 percent more than brunettes.
+        Women who wear makeup get better jobs and quicker promotions. This is unacceptable!"
+        <br>
+        <br>
+        Thi Huyen Nguyen
+    </div>
+</div>
+<br>
+<br>
+<div class="container numbers">
+    <div class="card-deck">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">harassed women</h5>
+                <hr>
+                <p class="card-text number" id="number1">0</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">complaints received</h5>
+                <hr>
+                <p class="card-text" id="number2">0</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">complaints resolved</h5>
+                <hr>
+                <p class="card-text" id="number3">0%</p>
+            </div>
+        </div>
+    </div>
+    <hr>
+
+</div>
+
+<div class="container" id="work">
+    <div class="container woman">
+        <div class="row align-items-center">
+            <div class="col-sm">
+                <img src="{{ app.request.baseUrl }}/assets/feminist.jpg" alt="Girl in a jacket" class="feminist">
+            </div>
+            <div class="col-sm text-left" id="equity">
+                <h2 class="subtitle">We care about women!</h2>
+                <p class="bodytext">Grace is an independent authority whose main duty is to supervise compliance with the Act on Equality between
+                    Women and Men. Grace has powers on matters related to gender, gender identity and gender expression.
+                    The powers of Grace consist of both combating discrimination and promoting equality.</p>
+                <a href="{{ path('app_register')}}" class="btn my-2 my-sm-0" type="submit" id="signup">Start your complain!</a>
+
+            </div>
+        </div>
+    </div>
+    <hr>
+</div>
+<div class="container">
+</div>
+<div class="container">
+    <div class="container woman">
+        <div class="row align-items-center">
+            <div class="col-sm text-right">
+                <h2 class="subtitle">Sign up to grace and take any man you want to court!</h2>
+                <p class="bodytext">Grace is an independent authority whose main duty is to supervise compliance with the Act on Equality between
+                    Women and Men. Grace has powers on matters related to gender, gender identity and gender expression.
+                    The powers of Grace consist of both combating discrimination and promoting equality.</p>
+                <a href="{{ path('app_register')}}" class="btn my-2 my-sm-0" type="submit" id="signup">Sign up here!</a>
+            </div>
+            <div class="col-sm">
+                <img src="{{ app.request.baseUrl }}/assets/woman.jpg" alt="Girl in a jacket" class="feminist">
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<footer class="page-footer font-small">
+    <div class="footer-copyright text-center py-3">Grace Ltd. © 2020
+    </div>
+</footer>
+
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+<script src="{{ app.request.baseUrl }}/js/script.js"></script>
+</html>
