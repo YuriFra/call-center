@@ -161,7 +161,7 @@ class TicketController extends AbstractController
     public function wontfix(Ticket $ticket, Request $request, userInterface $userInterface, userRepository $userRepository): Response
     {
         if($request->request->get('wontfixReason')){
-            $ticket->setStatus(Ticket::status["Won't fix"]);
+            $ticket->setStatus(Ticket::status["closed"]);
             $ticket->setClosed(new DateTime());
             $ticket->setWontFix($request->request->get('wontfixReason'));
             $comment = new Comment();
@@ -184,7 +184,7 @@ class TicketController extends AbstractController
      */
     public function reopen(Ticket $ticket): Response
     {
-        $ticket->setStatus(Ticket::status["open"]);
+        $ticket->setStatus(Ticket::status["in progress"]);
         $ticket->setClosed(NULL);
         $ticket->setReopened(true);
         $this->getDoctrine()->getManager()->flush();
