@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Welcome to Grace Ombudsservice</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="{{ app.request.baseUrl }}/css/style.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Alata&family=Nunito&display=swap" rel="stylesheet">
@@ -11,12 +11,12 @@
 </head>
 
 <nav class="navbar navbar-light justify-content-between">
-    <a href="#" class="navbar-brand">
+    <a href="{{ path('homepage')}}" class="navbar-brand">
         <img src="https://i.ibb.co/nLCPYRd/grace-logo.png" alt="grace-logo" width="125" class="d-inline-block align-middle mr-2">
     </a>
     <form class="form-inline">
-        <button class="btn my-2 my-sm-0" type="submit" id="signin">Sign in</button>
-        <button class="btn my-2 my-sm-0" type="submit" id="signup">Sign up</button>
+        <a href="{{ path('app_login') }}"class="btn my-2 my-sm-0" type="submit" id="signin">Sign in</a>
+        <a  href="{{ path('app_register')}}" class="btn my-2 my-sm-0" type="submit" id="signup">Sign up</a>
     </form>
 </nav>
 <body>
@@ -63,14 +63,14 @@
     <div class="container woman">
         <div class="row align-items-center">
             <div class="col-sm">
-                <img src="assets/feminist.jpg" alt="Girl in a jacket" class="feminist">
+                <img src="{{ app.request.baseUrl }}/assets/feminist.jpg" alt="Girl in a jacket" class="feminist">
             </div>
             <div class="col-sm text-left" id="equity">
                 <h2 class="subtitle">We care about women!</h2>
                 <p class="bodytext">Grace is an independent authority whose main duty is to supervise compliance with the Act on Equality between
                     Women and Men. Grace has powers on matters related to gender, gender identity and gender expression.
                     The powers of Grace consist of both combating discrimination and promoting equality.</p>
-                <button class="btn my-2 my-sm-0" type="submit" id="signup">Start your complain!</button>
+                <a href="{{ path('app_register')}}" class="btn my-2 my-sm-0" type="submit" id="signup">Start your complain!</a>
 
             </div>
         </div>
@@ -87,10 +87,10 @@
                 <p class="bodytext">Grace is an independent authority whose main duty is to supervise compliance with the Act on Equality between
                     Women and Men. Grace has powers on matters related to gender, gender identity and gender expression.
                     The powers of Grace consist of both combating discrimination and promoting equality.</p>
-                <button class="btn my-2 my-sm-0" type="submit" id="signup">Sign up here!</button>
+                <a href="{{ path('app_register')}}" class="btn my-2 my-sm-0" type="submit" id="signup">Sign up here!</a>
             </div>
             <div class="col-sm">
-                <img src="assets/woman.jpg" alt="Girl in a jacket" class="feminist">
+                <img src="{{ app.request.baseUrl }}/assets/woman.jpg" alt="Girl in a jacket" class="feminist">
             </div>
         </div>
     </div>
@@ -108,5 +108,5 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-<script src="js/script.js"></script>
+<script src="{{ app.request.baseUrl }}/js/script.js"></script>
 </html>
