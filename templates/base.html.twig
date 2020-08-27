@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <title>{% block title %}Welcome to Grace Ombudsservice{% endblock %}</title>
         {% block stylesheets %}
-            <link rel="stylesheet" href="css/style.css">
+            <link rel="stylesheet" href="{{ app.request.baseUrl }}/css/style.css">
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
             <link href="https://fonts.googleapis.com/css2?family=Alata&family=Nunito&display=swap" rel="stylesheet">
             <link href="https://fonts.googleapis.com/css2?family=Cormorant+Upright:wght@500&family=Oldenburg&display=swap" rel="stylesheet">
@@ -19,7 +19,7 @@
                 <a href="{{ path('app_logout') }}"class="btn my-2 my-sm-0" type="submit" id="logout">Log out</a>
             </form>
     </nav>
-    {% endblock %}
+{% endblock %}
     <body>
         {% block body %}
         {% endblock %}
