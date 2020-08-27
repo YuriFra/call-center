@@ -150,3 +150,74 @@ h5{
     font-size: 60px;
     color: #db9a9a;
 }
+
+/* make new comment */
+.form {
+    font-family: 'Oldenburg', cursive;
+    background-color: #8bcbd5;
+    box-shadow: 0px 0px 55px -6px rgba(0,0,0,0.4);
+    border-radius: 20px;
+    padding: 60px;
+    margin-top: 60px;
+    margin-bottom: 60px;
+    align-content: center;
+    text-align: center;
+}
+#comment {
+    width: 450px;
+    height: 360px;
+}
+#saveBtn {
+    background-color: #FF3636;
+    color: #F5F5F5;
+    width: 100%;
+}
+#saveBtn:hover {
+    background-color: #C14343;
+    color: #f1f2f3;
+}
+/* set priority */
+#priority {
+    width: 350px;
+    height: 370px;
+}
+/* re-assign ticket */
+#reAssign {
+    width: 380px;
+    height: 370px;
+}
+/* escalate ticket */
+#escalate {
+    width: 380px;
+    height: 340px;
+}
+/* new ticket */
+#new {
+    width: 400px;
+    height: 450px;
+}
+/* edit ticket */
+#edit {
+    width: 400px;
+    height: 520px;
+}
+/* delete */
+#deleteBtn {
+    background-color: #DB9A9A;
+    color: #F5F5F5;
+    width: 100%;
+}
+#deleteBtn:hover {
+    background-color: #C14343;
+    color: #f1f2f3;
+}
+/* won't fix */
+#fix {
+    width: 400px;
+    height: 400px;
+}
+/* mail agent */
+#mail {
+    width: 400px;
+    height: 360px;
+}
