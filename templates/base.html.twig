@@ -10,17 +10,16 @@
             <link href="https://fonts.googleapis.com/css2?family=Cormorant+Upright:wght@500&family=Oldenburg&display=swap" rel="stylesheet">
         {% endblock %}
     </head>
-
+{% block nav %}
     <nav class="navbar navbar-light justify-content-between">
             <a href="#" class="navbar-brand">
                 <img src="https://i.ibb.co/nLCPYRd/grace-logo.png" alt="grace-logo" width="125" class="d-inline-block align-middle mr-2">
             </a>
             <form class="form-inline">
-                <button class="btn my-2 my-sm-0" type="submit" id="signin">Sign in</button>
-                <button class="btn my-2 my-sm-0" type="submit" id="signup">Sign up</button>
+                <a href="{{ path('app_logout') }}"class="btn my-2 my-sm-0" type="submit" id="logout">Log out</a>
             </form>
     </nav>
-
+    {% endblock %}
     <body>
         {% block body %}
         {% endblock %}
