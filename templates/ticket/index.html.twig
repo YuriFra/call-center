@@ -11,12 +11,12 @@
         <br>
         <h1 id="overviewTickets" class="text-center">Overview Tickets</h1>
         <br>
-        <section id="overall actions" class="text-center">
+        <section id="overall actions" class="text-center mb-5">
             {% if user.roles|length==1 %}
                 <a href="{{ path('ticket_new') }}" class="btn text-white" id="signin">Create new</a>
             {% endif %}
             {% if roles['MANAGER'] in user.roles %}
-                <a href="{{ path('ticket_deAssign') }}" id=signin class="btn m-1">De-assign all tickets</a>
+                <a href="{{ path('ticket_deAssign') }}" id=signin class="btn text-white">De-assign all tickets</a>
             {% endif %}
         </section>
     </section>
@@ -37,7 +37,8 @@
                                 <span>State:</span>
                                 <span  class="badge pilletje" id="pilletje">{{ ticket.status }} </span>
                                 {% if roles['FLA'] in user.roles %}
-                                    <p class="card-subtitle mb-2 text-muted"> priority-level: {{ ticket.priority }}</p>
+                                    <span> Priority-level:</span>
+                                    <span class="badge pilletje" id="pilletje">{{ ticket.priority }}</span>
                                 {% endif %}
 
                             </div>
@@ -55,27 +56,27 @@
                         </div>
                         <div class="card-footer d-flex justify-content-around">
                             <div id="customerActions"  class="d-flex justify-content-center align-items-center">
-                                    <a class="customerAction mr-2" href="{{ path('ticket_show', {'id': ticket.id}) }}">| More details | </a>
+                                    <a class="action mr-2" href="{{ path('ticket_show', {'id': ticket.id}) }}">| More details | </a>
                                     {% if roles['FLA'] not in user.roles %}
-                                        <a class="customerAction mr-2" href="{{ path('ticket_edit', {'id': ticket.id}) }}">edit | </a>
+                                        <a class="action mr-2" href="{{ path('ticket_edit', {'id': ticket.id}) }}">edit | </a>
                                     {% endif %}
                                     {% if ticket.canComment(user) %}
-                                        <a class="customerAction mr-2" href="{{ path('ticket_comment', {'id': ticket.id}) }}">add comment | </a>
+                                        <a class="action mr-2" href="{{ path('ticket_comment', {'id': ticket.id}) }}">add comment | </a>
                                     {% endif %}
                                     {% if (ticket.status is same as(statuses["Waiting for customer feedback"])) and (roles['FLA'] not in user.roles) %}
-                                        <a class="customerAction mr-2" href="{{ path('ticket_respond', {'id': ticket.id}) }}">mail agent | </a>
+                                        <a class="action mr-2" href="{{ path('ticket_respond', {'id': ticket.id}) }}">mail agent | </a>
                                     {% endif %}
                                     {% if ticket.canReopen() and ticket.status is same as (statuses["closed"]) and user.roles|length==1 and ticket.wontfix is empty %}
-                                        <a class="customerAction mr-2" href="{{ path('ticket_reopen', {'id': ticket.id}) }}">Reopen |</a>
+                                        <a class="action mr-2" href="{{ path('ticket_reopen', {'id': ticket.id}) }}">Reopen |</a>
                                     {% endif %}
                             </div>
                             {% if roles['FLA'] in user.roles %}
-                            <div id="agentActions"  class="mr-1 dropdown">
-                                <button class="btn btn-secondary dropdown-toggle"
+                            <div id="agentActions"  class="mr-1 dropdown d-flex justify-content-center align-items-center">
+                                <a class=" action btn-link dropdown-toggle"
                                         type="button" id="dropdownMenu1" data-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false">
                                     Agent actions
-                                </button>
+                                </a>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
                                     {% if roles['FLA'] in user.roles %}
                                         {% if ticket.agentId == NULL %}
@@ -94,11 +95,11 @@
                             {% endif %}
                             {% if roles['MANAGER'] in user.roles %}
                             <div id="managerActions"  class="mr-1 dropdown">
-                                <button class="btn btn-secondary dropdown-toggle"
+                                <a class=" action btn-link dropdown-toggle"
                                         type="button" id="dropdownMenu1" data-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false">
                                     Manager actions
-                                </button>
+                                </a>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
                                     {% if roles['MANAGER'] in user.roles %}
 
@@ -126,11 +127,6 @@
 
         </div>
     </section>
-
-
-
-
-
 
     {% if roles['MANAGER'] in user.roles %}
         {{ include('ticket/_managerDashboard.html.twig') }}

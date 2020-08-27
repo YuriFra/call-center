@@ -28,10 +28,10 @@
     color: #fff;
 }
 
-.customerAction{
+.action{
     color:  #db9a9a;
 }
 
-.customerAction:hover{
+.action:hover{
     color:  #FF3636;
 }
