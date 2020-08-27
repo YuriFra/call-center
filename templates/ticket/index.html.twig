@@ -17,6 +17,7 @@
             {% endif %}
             {% if roles['MANAGER'] in user.roles %}
                 <a href="{{ path('ticket_deAssign') }}" id=signin class="btn text-white">De-assign all tickets</a>
+                <a href="#dashboard" id=signin class="btn text-white">Dashboard</a>
             {% endif %}
         </section>
     </section>
@@ -129,6 +130,8 @@
     </section>
 
     {% if roles['MANAGER'] in user.roles %}
-        {{ include('ticket/_managerDashboard.html.twig') }}
+        <section id="dashboard">
+            {{ include('ticket/_managerDashboard.html.twig') }}
+        </section>
     {% endif %}
 {% endblock %}
