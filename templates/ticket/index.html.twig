@@ -1,99 +1,138 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Ticket index{% endblock %}
+ {% block stylesheets %}
+   {{ parent() }}
+     <link rel="stylesheet" href="{{ app.request.baseUrl }}/css/ticket_index.css">
 
+ {% endblock %}
 {% block body %}
-    <h1>Overview Tickets</h1>
+    <section class="mt-4 container">
+        <br>
+        <h1 id="overviewTickets" class="text-center">Overview Tickets</h1>
+        <br>
+        <section id="overall actions" class="text-center">
+            {% if user.roles|length==1 %}
+                <a href="{{ path('ticket_new') }}" class="btn text-white" id="signin">Create new</a>
+            {% endif %}
+            {% if roles['MANAGER'] in user.roles %}
+                <a href="{{ path('ticket_deAssign') }}" id=signin class="btn m-1">De-assign all tickets</a>
+            {% endif %}
+        </section>
+    </section>
+    <section  id="cards" class="text-left container">
+        <div class="row">
+            {% for ticket in tickets %}
+            <div class="col-6 my-2">
+                    <div class="card ticket">
+                        <div class="card-header">
+                                <div  id="date" class=" text-left">
+                                    <span>{{ ticket.posted ? ticket.posted|date('Y-m-d H:i:s') : '' }}</span>
+                                </div>
+                            <div class="mb-3">
+                                <h5 class="card-titel font-weight-bold">#{{ ticket.id }}</h5>
+                                <h5 class="card-titel font-weight-bold">{{ ticket.title }}</h5>
+                            </div>
+                            <div class="mb-2" >
+                                <span>State:</span>
+                                <span  class="badge pilletje" id="pilletje">{{ ticket.status }} </span>
+                                {% if roles['FLA'] in user.roles %}
+                                    <p class="card-subtitle mb-2 text-muted"> priority-level: {{ ticket.priority }}</p>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                        <div class="card-body bg-light ">
+                            <div class="card-text">
+                                {{ ticket.message }}
+                            </div>
+                            <div>
+                                {% if ticket.agentId != NULL %}
+                                    <p> handled by: {{ ticket.agentId }}</p>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                        <div class="card-footer d-flex justify-content-around">
+                            <div id="customerActions"  class="d-flex justify-content-center align-items-center">
+                                    <a class="customerAction mr-2" href="{{ path('ticket_show', {'id': ticket.id}) }}">| More details | </a>
+                                    {% if roles['FLA'] not in user.roles %}
+                                        <a class="customerAction mr-2" href="{{ path('ticket_edit', {'id': ticket.id}) }}">edit | </a>
+                                    {% endif %}
+                                    {% if ticket.canComment(user) %}
+                                        <a class="customerAction mr-2" href="{{ path('ticket_comment', {'id': ticket.id}) }}">add comment | </a>
+                                    {% endif %}
+                                    {% if (ticket.status is same as(statuses["Waiting for customer feedback"])) and (roles['FLA'] not in user.roles) %}
+                                        <a class="customerAction mr-2" href="{{ path('ticket_respond', {'id': ticket.id}) }}">mail agent | </a>
+                                    {% endif %}
+                                    {% if ticket.canReopen() and ticket.status is same as (statuses["closed"]) and user.roles|length==1 and ticket.wontfix is empty %}
+                                        <a class="customerAction mr-2" href="{{ path('ticket_reopen', {'id': ticket.id}) }}">Reopen |</a>
+                                    {% endif %}
+                            </div>
+                            {% if roles['FLA'] in user.roles %}
+                            <div id="agentActions"  class="mr-1 dropdown">
+                                <button class="btn btn-secondary dropdown-toggle"
+                                        type="button" id="dropdownMenu1" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
+                                    Agent actions
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                    {% if roles['FLA'] in user.roles %}
+                                        {% if ticket.agentId == NULL %}
+                                            <a class="dropdown-item" href="{{ path('ticket_assign', {'id': ticket.id,'user_id': user.id}) }}">Assign
+                                                myself</a>
+                                        {% endif %}
+                                        {% if ticket.status != statuses["closed"] and ticket.canClose() %}
+                                            <a class="dropdown-item" href="{{ path('ticket_close', {'id': ticket.id}) }}">Close ticket</a>
+                                        {% endif %}
+                                        {% if ticket.agentId != NULL and  ticket.status != statuses["closed"] %}
+                                            <a class="dropdown-item" href="{{ path('ticket_escalate', {'id': ticket.id}) }}">Escalate</a>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if roles['MANAGER'] in user.roles %}
+                            <div id="managerActions"  class="mr-1 dropdown">
+                                <button class="btn btn-secondary dropdown-toggle"
+                                        type="button" id="dropdownMenu1" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
+                                    Manager actions
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                    {% if roles['MANAGER'] in user.roles %}
+
+                                        <a class="dropdown-item" href="{{ path('ticket_priority', {'id': ticket.id}) }}">Adjust priority</a>
+                                        {% if ticket.agentId is not empty %}
+
+                                            <a class="dropdown-item" href="{{ path('ticket_reassign', {'id': ticket.id}) }}">Re-assign</a>
+                                        {% endif %}
+                                        {% if ticket.wontfix is empty %}
+                                            <a class="dropdown-item" href="{{ path('ticket_wontfix', {'id': ticket.id}) }}">Mark as "Won't fix"</a>
+                                        {% endif %}
+
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+            </div>
+            {% else %}
+
+                <p>no records found</p>
+
+            {% endfor %}
+
+        </div>
+    </section>
+
+
+
+
+
+
     {% if roles['MANAGER'] in user.roles %}
-        <a href="{{ path('ticket_deAssign')}}">De-assign all tickets</a>
-    {% endif %}
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Message</th>
-                <th>Status</th>
-                {% if roles['FLA'] in user.roles %}
-                <th>Priority</th>
-                {% endif %}
-                <th>Posted</th>
-                <th>Agent</th>
-                <th>actions</th>
-                {% if roles['FLA'] in user.roles %}
-                <th>Agent actions</th>
-                {% endif %}
-                {% if roles['MANAGER'] in user.roles %}
-                <th>Manager actions</th>
-                {% endif %}
-            </tr>
-        </thead>
-        <tbody>
-        {% for ticket in tickets %}
-            <tr>
-                <td>{{ ticket.id }}</td>
-                <td>{{ ticket.title }}</td>
-                <td>{{ ticket.message }}</td>
-                <td>{{ ticket.status }}</td>
-                {% if roles['FLA'] in user.roles %}
-                <td>{{ ticket.priority }}</td>
-                {% endif %}
-                <td>{{ ticket.posted ? ticket.posted|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ ticket.agentId }}</td>
-                <td>
-                    <a href="{{ path('ticket_show', {'id': ticket.id}) }}">show</a>
-                    {% if roles['FLA'] not in user.roles %}
-                    <a href="{{ path('ticket_edit', {'id': ticket.id}) }}">edit</a>
-                    {% endif %}
-                    {% if ticket.canComment(user) %}
-                        <a href="{{ path('ticket_comment', {'id': ticket.id}) }}">add comment</a>
-                    {% endif %}
-                    {% if (ticket.status is same as(statuses["Waiting for customer feedback"])) and (roles['FLA'] not in user.roles) %}
-                    <a href="{{ path('ticket_respond', {'id': ticket.id}) }}">mail agent</a>
-                    {% endif %}
-                    {% if ticket.canReopen() and ticket.status is same as (statuses["closed"]) and user.roles|length==1 and ticket.wontfix is empty  %}
-                        <a href="{{ path('ticket_reopen', {'id': ticket.id}) }}">Reopen</a>
-                    {% endif %}
-                </td>
-
-                {% if roles['FLA'] in user.roles %}
-                    <td>
-                        {% if ticket.agentId == NULL %}
-                        <a href="{{  path('ticket_assign', {'id': ticket.id,'user_id': user.id}) }}">Assign myself</a>
-                        {% endif %}
-                        {% if ticket.status != statuses["closed"] and ticket.canClose() %}
-                            <a href="{{  path('ticket_close', {'id': ticket.id}) }}">Close ticket</a>
-                        {% endif %}
-                        {% if ticket.agentId != NULL and  ticket.status != statuses["closed"]  %}
-                            <a href="{{ path('ticket_escalate', {'id': ticket.id}) }}">Escalate</a>
-                        {% endif %}
-
-                    </td>
-                {% endif %}
-                {% if roles['MANAGER'] in user.roles%}
-                    <td>
-                    <a href="{{ path('ticket_priority', {'id': ticket.id}) }}">Adjust priority</a>
-                    {% if ticket.agentId is not empty  %}
-
-                        <a href="{{ path('ticket_reassign', {'id': ticket.id}) }}">Re-assign</a>
-                        {% if ticket.wontfix is empty %}
-                            <a href="{{ path('ticket_wontfix', {'id': ticket.id}) }}">Mark as "Won't fix"</a>
-                        {% endif %}
-                    </td>
-                {% endif %}
-                {% endif %}
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="7">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    {% if roles['FLA'] not in user.roles %}
-    <a href="{{ path('ticket_new') }}">Create new</a>
-    {% endif %}
-    {% if roles['MANAGER'] in user.roles %}
-    {{ include('ticket/_managerDashboard.html.twig') }}
+        {{ include('ticket/_managerDashboard.html.twig') }}
     {% endif %}
 {% endblock %}
