@@ -2,11 +2,191 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        <title>{% block title %}Welcome to Grace Ombudsservice{% endblock %}</title>
+        {% block stylesheets %}
+            <link rel="stylesheet" href="style.css">
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+            <link href="https://fonts.googleapis.com/css2?family=Alata&family=Nunito&display=swap" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css2?family=Cormorant+Upright:wght@500&family=Oldenburg&display=swap" rel="stylesheet">
+        {% endblock %}
     </head>
+
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            color: #AAAAAA;
+            background-color: #f1f2f3;
+        }
+        .card {
+            color: #db9a9a;
+            text-align: center;
+            font-family: 'Oldenburg', cursive;
+        }
+        .card-title{
+            color: #B3CAD0;
+        ;
+        }
+        #work{
+            margin-top: 50px;
+        }
+        .parallax {
+            background-image: url("grace.jpg");
+
+            min-height: 500px;
+
+            /* Create the parallax scrolling effect */
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .woman {
+            margin-top: 60px;
+            margin-bottom: 60px;
+        }
+        .card-text{
+            font-family: 'Nunito', sans-serif;
+            color: #AAAAAA;
+        }
+        .feminist{
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            align-content: end;
+        }
+
+        .navbar {
+            background-color: #db9a9a;
+            padding: 20px 20px 20px 40px;
+        }
+        .page-footer {
+            background-color: #FF3636;
+            font-family: 'Oldenburg', cursive;
+            color: whitesmoke;
+        }
+        #signup {
+            background-color: #FF3636;
+            font-family: 'Oldenburg', cursive;
+            color: #F5F5F5;
+            margin-right: 20px;
+        }
+        #signin {
+            background-color: #B3CAD0;
+            font-family: 'Oldenburg', cursive;
+            margin-right: 10px;
+        }
+        #signin:hover {
+            background-color: #007470;
+            color: #f1f2f3;
+        }
+        h1{
+            font-family: 'Oldenburg', cursive;
+            color: #FF3636;
+        }
+
+        h2{
+            font-family: 'Oldenburg', cursive;
+            color: #FF3636;
+        }
+
+        h5{
+            color: #B3CAD0;
+        }
+        #registerform {
+            background-color: #98f8ff;
+            box-shadow: 0px 0px 55px -6px rgba(0,0,0,0.4);
+            border-radius: 20px;
+            padding: 60px;
+            margin-top: 100px;
+            width: 400px;
+            height: 450px;
+            align-content: center;
+            text-align: center;
+        }
+
+        #registerintro {
+            margin-top: 200px;
+            padding-right: 40px;
+            text-align: right;
+        }
+
+        .quote {
+            font-family: 'Oldenburg', cursive;
+            width: 500px;
+            padding: 50px;
+        }
+
+        #registerbtn, #signinbutton {
+            background-color: #FF3636;
+            width: 100%;
+            font-family: 'Oldenburg', cursive;
+            color: #F5F5F5;
+        }
+
+        #registerbtn:hover,
+        #signinbutton:hover,
+        #signup:hover{
+            background-color: #c14343
+        }
+
+        #registerwidgets {
+            width: 100%;
+        }
+
+        #registration_form_username,
+        #registration_form_email,
+        #registration_form_plainPassword,
+        #inputPassword, #inputUsername{
+            width: 100%;
+            border: 0;
+            border-radius: 2px;
+            margin-bottom: 20px;
+            height: 30px;
+        }
+
+        #equity {
+            text-align: left;
+        }
+
+        .title {
+            font-family: 'Abril Fatface', cursive;
+            text-align: center;
+        }
+
+        .subtitle {
+            font-size: 60px;
+            color: #db9a9a;
+
+        }
+    </style>
+
+    <nav class="navbar navbar-light justify-content-between">
+            <a href="#" class="navbar-brand">
+                <img src="https://i.ibb.co/nLCPYRd/grace-logo.png" alt="grace-logo" width="125" class="d-inline-block align-middle mr-2">
+            </a>
+            <form class="form-inline">
+                <button class="btn my-2 my-sm-0" type="submit" id="signin">Sign in</button>
+                <button class="btn my-2 my-sm-0" type="submit" id="signup">Sign up</button>
+            </form>
+    </nav>
+
     <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+        {% block body %}
+        {% endblock %}
+        {% block javascripts %}
+        {% endblock %}
     </body>
+
+{% block footer %}
+    <footer class="page-footer font-small fixed-bottom">
+        <div class="footer-copyright text-center py-3">Grace Ltd. © 2020
+        </div>
+    </footer>
+{% endblock %}
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 </html>

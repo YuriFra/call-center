@@ -1,22 +1,35 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Register to Grace{% endblock %}
 
 {% block body %}
     {% for flashError in app.flashes('verify_email_error') %}
+        <br>
         <div class="alert alert-danger" role="alert">{{ flashError }}</div>
     {% endfor %}
 
+<div class="container">
+    <div class="row">
+        <div class="col-sm" id="registerintro">
+            <h1>Make your Grace account here </h1>
+            <h3>Welcome dear customer. If you have no account at Grace Ombudsservices you can make a new account here before you log in to our platform.</h3>
+        </div>
+
+        <div class="col-sm" id="registerform">
     <h1>Register</h1>
-
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.username) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
-
-        <button type="submit" class="btn">Register</button>
+    <hr>
+            <div class="registerwidgets">
+                {{ form_start(registrationForm) }}
+                {{ form_widget(registrationForm.username) }}
+                {{ form_widget(registrationForm.email) }}
+                {{ form_widget(registrationForm.plainPassword, {
+                    label: 'Password'
+                }) }}
+            </div>
+    {{ form_row(registrationForm.agreeTerms) }}
+    <button type="submit" class="btn" id="registerbtn">Register</button>
     {{ form_end(registrationForm) }}
+    </div>
+    </div>
+</div>
 {% endblock %}
