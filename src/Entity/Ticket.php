@@ -69,7 +69,9 @@ class Ticket
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $agentId;
+    private $agentId;//@tod: remove this when possible
+
+    //make agent field
 
     /**
      * @ORM\Column(type="boolean")
@@ -218,6 +220,8 @@ class Ticket
     {
         $this->agentId = $agentId;
 
+        //$this->agent = load agent
+
         return $this;
     }
 
@@ -309,12 +313,12 @@ class Ticket
         }
     }
 
-    public function canView(UserInterface $userInterface, User $user){
-        if(in_array(User::roles['MANAGER'], $userInterface->getRoles())){
+    public function canView(User $user) : bool{
+        if(in_array(User::roles['MANAGER'], $user->getRoles())){
             return true;
-        }elseif(in_array(User::roles['SLA'], $userInterface->getRoles()) and $this->getAgentId() === $user->getId() ){
+        }elseif(in_array(User::roles['SLA'], $user->getRoles()) and $this->getAgentId() === $user->getId() ){
             return true;
-        }elseif (in_array(User::roles['FLA'], $userInterface->getRoles()) and !in_array(User::roles['SLA'], $userInterface->getRoles()) and ($this->getAgentId()===null || $this->getAgentId()===$user->getId())){
+        }elseif (in_array(User::roles['FLA'], $user->getRoles()) and !in_array(User::roles['SLA'], $user->getRoles()) and ($this->getAgentId()===null || $this->getAgentId()===$user->getId())){
             return true;
         }else{
             return false;

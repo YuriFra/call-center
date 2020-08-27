@@ -32,14 +32,15 @@ class TicketController extends AbstractController
      */
     public function index(TicketRepository $ticketRepository, UserInterface $userInterface, UserRepository $userRepository): Response
     {
+//        $user = $this->getUser();
         $user = $userRepository->findOneBy(['username' => $userInterface->getUsername()]);
-        $tickets=$ticketRepository->showTickets($userInterface, $user);
+        $tickets=$ticketRepository->showTickets($user);
         $dashBoard = new DashBoard($ticketRepository);
-        usort($tickets, function ($ticket1, $ticket2){
+        /*usort($tickets, function ($ticket1, $ticket2){
             $pos_a = array_search($ticket1->getPriority(), Ticket::priorities, true);
             $pos_b = array_search($ticket2->getPriority(), Ticket::priorities, true);
             return $pos_b-$pos_a;
-        });
+        });*/
 
 
         return $this->render('ticket/index.html.twig', [
@@ -79,6 +80,7 @@ class TicketController extends AbstractController
 
     /**
      * @Route("/deAssign", name="ticket_deAssign", methods={"GET","POST"})
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function deAssignAll(TicketRepository $ticketRepository): Response
     {
@@ -96,6 +98,9 @@ class TicketController extends AbstractController
      */
     public function show(Ticket $ticket): Response
     {
+        if($this->getUser()->getId() !== $ticket->getUser()->getid()) {
+            throw new Exception('404');
+        }
 
         return $this->render('ticket/show.html.twig', [
             'ticket' => $ticket,
@@ -109,7 +114,7 @@ class TicketController extends AbstractController
     public function close(Ticket $ticket): Response
     {
         $ticket->setStatus(Ticket::status['closed']);
-        $ticket->setClosed(new DateTime());
+        $ticket->setClosed(new \DateTimeImmutable());
         $this->getDoctrine()->getManager()->flush();
         return $this->redirectToRoute('ticket_index');
     }
@@ -139,7 +144,7 @@ class TicketController extends AbstractController
      */
     public function reassign(Ticket $ticket, UserRepository $userRepository, Request $request): Response
     {
-        $users = $userRepository->findAll();
+        $users = $userRepository->findAll();//@todo filter here
         $user = $userRepository->findOneBy(['id' => $ticket->getAgentId()]);
 
         if($request->request->get('agents')){
@@ -164,7 +169,7 @@ class TicketController extends AbstractController
             $ticket->setStatus(Ticket::status["closed"]);
             $ticket->setClosed(new DateTime());
             $ticket->setWontFix($request->request->get('wontfixReason'));
-            $comment = new Comment();
+            $comment = new Comment();// Comment::create($user, $ticket, $text);
             $user = $userRepository->findOneBy(['username'=> $userInterface->getUsername()]);
             $comment->setComment($request->request->get('wontfixReason'));
             $comment->setUser($user);
@@ -275,7 +280,7 @@ class TicketController extends AbstractController
     {
         if ($request->request->get('priorities')) {
             $ticket->setPriority($request->request->get('priorities'));
-           $this->getDoctrine()->getManager()->flush();
+            $this->getDoctrine()->getManager()->flush();
             return $this->redirectToRoute('ticket_index');
         }
 

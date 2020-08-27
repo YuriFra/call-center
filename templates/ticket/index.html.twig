@@ -4,6 +4,7 @@
 
 {% block body %}
     <h1>Overview Tickets</h1>
+
     {% if roles['MANAGER'] in user.roles %}
         <a href="{{ path('ticket_deAssign')}}">De-assign all tickets</a>
     {% endif %}

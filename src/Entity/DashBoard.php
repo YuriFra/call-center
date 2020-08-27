@@ -18,9 +18,10 @@ class DashBoard
      */
     public function __construct(TicketRepository $ticketRepository)
     {
-        $this->countOpen($ticketRepository);
-        $this->countClosed($ticketRepository);
-        $this->countReopened($ticketRepository);
+        $tickets = $ticketRepository->findAll();
+        $this->countOpen($tickets);
+        $this->countClosed($tickets);
+        $this->countReopened($tickets);
         $this->countPercent();
     }
 
@@ -56,9 +57,8 @@ class DashBoard
         return $this->percent;
     }
 
-    private function countOpen(TicketRepository $ticketRepository): void
+    private function countOpen(array $tickets): void
     {
-        $tickets = $ticketRepository->findAll();
         foreach ($tickets as $ticket) {
             if ($ticket->getStatus() === 'open') {
                 ++$this->counterOpen;
@@ -66,9 +66,11 @@ class DashBoard
         }
     }
 
-    private function countClosed(TicketRepository $ticketRepository): void
+    /**
+     * @param Ticket[] $tickets
+     */
+    private function countClosed(array $tickets): void
     {
-        $tickets = $ticketRepository->findAll();
         foreach ($tickets as $ticket) {
             if ($ticket->getStatus() === 'closed') {
                 ++$this->counterClosed;
@@ -76,9 +78,8 @@ class DashBoard
         }
     }
 
-    private function countReopened(TicketRepository $ticketRepository): void
+    private function countReopened(array $tickets): void
     {
-        $tickets = $ticketRepository->findAll();
         foreach ($tickets as $ticket) {
             if ($ticket->getReopened() === true) {
                 ++$this->counterReopened;
