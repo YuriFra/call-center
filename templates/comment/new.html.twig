@@ -1,11 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Comment{% endblock %}
+    {% block title %}New comment{% endblock %}
 
-{% block body %}
-    <h1>Create new Comment</h1>
+    {% block body %}
+        <div class="row d-flex justify-content-center">
+            <div id="comment" class="form">
+                <h1 class="h3 mb-2 font-weight-normal">Create new comment</h1>
+                <hr>
+                <br>
+                {{ include('comment/_form.html.twig') }}
+                <a class="text-center mt-2" href="{{ path('ticket_index') }}">back to list</a>
+            </div>
+        </div>
+    {% endblock %}
 
-    {{ include('comment/_form.html.twig') }}
 
-    <a href="{{ path('ticket_index') }}">back to list</a>
-{% endblock %}

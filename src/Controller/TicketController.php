@@ -23,6 +23,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class TicketController extends AbstractController
 {
+
+
+
     /**
      * @Route("/", name="ticket_index", methods={"GET"})
      * @param TicketRepository $ticketRepository
