@@ -41,6 +41,10 @@
                                     <span> Priority-level:</span>
                                     <span class="badge pilletje" id="pilletje">{{ ticket.priority }}</span>
                                 {% endif %}
+                                {% if ticket.agentId != NULL %}
+                                    <span> handled by:</span>
+                                    <span class="badge pilletje" id="pilletje">{{ ticket.agentId }}</span>
+                                {% endif %}
 
                             </div>
                         </div>
@@ -48,15 +52,9 @@
                             <div class="card-text">
                                 {{ ticket.message }}
                             </div>
-                            <div>
-                                {% if ticket.agentId != NULL %}
-                                    <p> handled by: {{ ticket.agentId }}</p>
-                                {% endif %}
-
-                            </div>
                         </div>
-                        <div class="card-footer d-flex justify-content-around">
-                            <div id="customerActions"  class="d-flex justify-content-center align-items-center">
+                        <div class="card-footer">
+                            <div id="customerActions"  class="">
                                     <a class="action mr-2" href="{{ path('ticket_show', {'id': ticket.id}) }}">| More details | </a>
                                     {% if roles['FLA'] not in user.roles %}
                                         <a class="action mr-2" href="{{ path('ticket_edit', {'id': ticket.id}) }}">edit | </a>
@@ -72,7 +70,7 @@
                                     {% endif %}
                             </div>
                             {% if roles['FLA'] in user.roles %}
-                            <div id="agentActions"  class="mr-1 dropdown d-flex justify-content-center align-items-center">
+                            <div id="agentActions"  class="mr-1 dropdown">
                                 <a class=" action btn-link dropdown-toggle"
                                         type="button" id="dropdownMenu1" data-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false">

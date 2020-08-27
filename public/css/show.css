@@ -1,0 +1,29 @@
+.badge-status {
+    font-size: 100%;
+    color: #ffffff;
+    background-color: #B3CAD0;
+}
+
+#card {
+    border: 1px solid rgba(0,0,0,.125);
+    background-color: rgba(0,0,0,.03);
+}
+
+.ticket-id {
+    font-family: 'Oldenburg', cursive;
+    color: #88bbb1;
+}
+
+.comment-author {
+    color: rgba(0,0,0,.375);
+}
+
+.btn-edit {
+    background-color: #B3CAD0;
+    color: #ffffff;
+}
+
+.btn-edit:hover {
+    background-color: #88bbb7;
+    color: #f1f2f3;
+}
