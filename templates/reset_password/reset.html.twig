@@ -1,12 +1,23 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Reset your password{% endblock %}
-
+{% block nav %}
+    <nav class="navbar navbar-light justify-content-between">
+        <a href="{{ path('ticket_index') }}" class="navbar-brand">
+            <img src="https://i.ibb.co/nLCPYRd/grace-logo.png" alt="grace-logo" width="125" class="d-inline-block align-middle mr-2">
+        </a>
+    </nav>
+{% endblock %}
 {% block body %}
-    <h1>Reset your password</h1>
-
-    {{ form_start(resetForm) }}
-        {{ form_row(resetForm.plainPassword) }}
-        <button class="btn btn-primary">Reset password</button>
-    {{ form_end(resetForm) }}
+    <div class="row d-flex justify-content-center">
+        <div id="reset" class="form">
+            <h1 class="h3 mb-2 font-weight-normal">Reset your password</h1>
+            <hr>
+            <br>
+            {{ form_start(resetForm) }}
+            {{ form_row(resetForm.plainPassword) }}
+            <button class="btn my-3" id="saveBtn">Reset password</button>
+            {{ form_end(resetForm) }}
+        </div>
+    </div>
 {% endblock %}

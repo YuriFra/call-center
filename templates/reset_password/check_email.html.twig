@@ -1,8 +1,23 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Password Reset Email Sent{% endblock %}
-
+{% block nav %}
+    <nav class="navbar navbar-light justify-content-between">
+        <a href="{{ path('ticket_index') }}" class="navbar-brand">
+            <img src="https://i.ibb.co/nLCPYRd/grace-logo.png" alt="grace-logo" width="125" class="d-inline-block align-middle mr-2">
+        </a>
+    </nav>
+{% endblock %}
 {% block body %}
-    <p>An email has been sent that contains a link that you can click to reset your password. This link will expire in {{ tokenLifetime|date('g') }} hour(s).</p>
-    <p>If you don't receive an email please check your spam folder or <a href="{{ path('app_forgot_password_request') }}">try again</a>.</p>
+    <div class="row d-flex justify-content-center">
+        <div id="reset" class="form">
+            <h1 class="h3 mb-2 font-weight-normal">Reset your password</h1>
+            <hr>
+            <br>
+            <p>An email has been sent that contains a link that you can click to reset your password. This link will
+                expire in {{ tokenLifetime|date('g') }} hour(s).</p>
+            <p>If you don't receive an email please check your spam folder or <a
+                        href="{{ path('app_forgot_password_request') }}">try again</a>.</p>
+        </div>
+    </div>
 {% endblock %}
