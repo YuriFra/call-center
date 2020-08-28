@@ -98,11 +98,6 @@ class TicketController extends AbstractController
     {
         $user=$this->getUser();
 
-        $agent = User::roles['FLA'];
-        if($ticket->getUser()->getId() !== $this->getUser()->getId() || ($ticket->getUser()->getId() !== $this->getUser()->getId() && in_array($agent, $this->getUser()->getRoles(), false))) {
-               throw new NotFoundHttpException('404');
-        }
-
         return $this->render('ticket/show.html.twig', [
             'ticket' => $ticket,
             'roles'=>User::roles,
