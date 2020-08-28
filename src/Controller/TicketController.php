@@ -11,6 +11,7 @@ use App\Form\ResponseCustomerType;
 use App\Form\TicketType;
 use App\Repository\TicketRepository;
 use App\Repository\UserRepository;
+use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -34,11 +35,6 @@ class TicketController extends AbstractController
         $user = $this->getUser();
         $tickets=$ticketRepository->showTickets($user);
         $dashBoard = new DashBoard($ticketRepository);
-        /*usort($tickets, function ($ticket1, $ticket2){
-            $pos_a = array_search($ticket1->getPriority(), Ticket::priorities, true);
-            $pos_b = array_search($ticket2->getPriority(), Ticket::priorities, true);
-            return $pos_b-$pos_a;
-        });*/
 
         return $this->render('ticket/index.html.twig', [
             'tickets' => $tickets,
