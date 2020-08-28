@@ -1,59 +1,59 @@
 {% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ app.request.baseUrl }}/css/show.css">
+{% endblock %}
 
 {% block title %}Ticket{% endblock %}
 
 {% block body %}
-    <h1>Ticket</h1>
+    <section class="container">
+        <h1 class="mt-5">Ticket</h1>
+        <div class="ticket-navigation d-flex justify-content-between mt-5 mb-3">
+            <a class="btn btn-light" href="{{ path('ticket_index') }}"><span><i class="fas fa-long-arrow-alt-left"></i></span> Back to list</a>
+            <a class="btn btn-edit"href="{{ path('ticket_edit', {'id': ticket.id}) }}"> Edit</a>
+        </div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ ticket.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ ticket.title }}</td>
-            </tr>
-            <tr>
-                <th>Message</th>
-                <td>{{ ticket.message }}</td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td>{{ ticket.status }}</td>
-            </tr>
-            <tr>
-                <th>Priority</th>
-                <td>{{ ticket.priority }}</td>
-            </tr>
-            <tr>
-                <th>Posted</th>
-                <td>{{ ticket.posted ? ticket.posted|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
-    <a href="{{ path('ticket_index') }}">back to list</a>
-    <a href="{{ path('ticket_edit', {'id': ticket.id}) }}">edit</a>
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <p class="align-middle mb-0">Ticket: <span class="ticket-id">#{{ ticket.id }}</span></p>
+                <p class="align-middle mb-0">Priority: <span class="badge badge-status pilletje">{{ ticket.priority }}</span></p>
+                <p class="align-middle mb-0">Status: <span class="badge badge-status pilletje">{{ ticket.status }}</span></p>
+            </div>
+            <div class="card-body py-5">
+                <h4 class="card-title">{{ ticket.title }}</h4>
+                <p class="my-5">{{ ticket.message }}</p>
+            </div>
+            <div class="card-footer">
+                <p class="align-middle mb-0">Posted: {{ ticket.posted ? ticket.posted|date('Y-m-d H:i:s') : '' }}</p>
+            </div>
+        </div>
 
-    {{ include('ticket/_delete_form.html.twig') }}
-    <br>
-    <h3>Comments</h3>
-    {% for comment in ticket.comments %}
-        {% if comment.private == false %}
-            <li>
-                <p>User: {{ comment.user.username }}</p>
-                <p>Comment: {{ comment.comment }}</p>
-            </li>
-        {% elseif is_granted(roles['FLA']) %}
-            <li>
-                <p>User: {{ comment.user.username }}</p>
-                <p>Roles: {{ comment.user.roles|join }}</p>
-                <p>Comment: {{ comment.comment }}</p>
-                <p>Private: {{ comment.private }}</p>
-            </li>
-        {% endif %}
-    {% endfor %}
-    <br>
-
+        {{ include('ticket/_delete_form.html.twig') }}
+        <br>
+        <h2 class="mt-5">Comments</h2>
+        <ul class="list-group mb-5">
+        {% for comment in ticket.comments %}
+            {% if comment.private == false %}
+            <div class="card my-2 py-4" id="card">
+                <div class="card-body d-flex flex-column py-0">
+                    <p class="text-left">{{ comment.comment }}</p>
+                    <p class="text-right mb-0 comment-author">Written by: {{ comment.user.username }}</p>
+                </div>
+            </div>
+            {% elseif is_granted(roles['FLA']) %}
+            <div class="card" id="card">
+                <div class="card-body">
+                        <p>User: {{ comment.user.username }}</p>
+                        <p>Roles: {{ comment.user.roles|join }}</p>
+                        <p>Comment: {{ comment.comment }}</p>
+                        <p>Private: {{ comment.private }}</p>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+        </ul>
+        <br>
+    </section>
+    <script src="{{ app.request.baseUrl }}/js/scriptBadges.js"></script>
 {% endblock %}

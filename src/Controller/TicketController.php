@@ -9,6 +9,7 @@ use App\Entity\User;
 use App\Form\CommentType;
 use App\Form\ResponseCustomerType;
 use App\Form\TicketType;
+use App\Repository\CommentRepository;
 use App\Repository\TicketRepository;
 use App\Repository\UserRepository;
 use DateTime;
@@ -296,6 +297,11 @@ class TicketController extends AbstractController
 
         if ($this->isCsrfTokenValid('delete'.$ticket->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
+            $comments= $ticket->getComments();
+            foreach ($comments as $comment){
+                $entityManager->remove($comment);
+            }
+
             $entityManager->remove($ticket);
             $entityManager->flush();
         }

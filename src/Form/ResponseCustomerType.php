@@ -13,11 +13,11 @@ class ResponseCustomerType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('response',TextareaType::class )
-            ->add('respondToAgent', SubmitType::class, [
-
-            ]);
-        ;
+            ->add('response',TextareaType::class, array('attr' => array('class' => 'form-control', 'placeholder' => 'message')))
+            ->add('send', SubmitType::class, array('attr' => [
+                'class' => 'btn my-3',
+                'id' => 'saveBtn',
+            ]));
     }
 
     public function configureOptions(OptionsResolver $resolver)
