@@ -12,6 +12,7 @@ use App\Form\TicketType;
 use App\Repository\TicketRepository;
 use App\Repository\UserRepository;
 use DateTime;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,19 +42,21 @@ class TicketController extends AbstractController
             return $pos_b-$pos_a;
         });
 
-
         return $this->render('ticket/index.html.twig', [
             'tickets' => $tickets,
             'user'=>$user,
             'statuses'=>Ticket::status,
             'roles'=>User::roles,
             'dashboard' => $dashBoard,
-
         ]);
     }
 
     /**
      * @Route("/new", name="ticket_new", methods={"GET","POST"})
+     * @param Request $request
+     * @param UserInterface $userInterface
+     * @param UserRepository $userRepository
+     * @return Response
      */
     public function new(Request $request, UserInterface $userInterface, UserRepository $userRepository): Response
     {
@@ -79,6 +82,9 @@ class TicketController extends AbstractController
 
     /**
      * @Route("/deAssign", name="ticket_deAssign", methods={"GET","POST"})
+     * @Security("is_granted('ROLE_MANAGER')")
+     * @param TicketRepository $ticketRepository
+     * @return Response
      */
     public function deAssignAll(TicketRepository $ticketRepository): Response
     {
@@ -93,10 +99,11 @@ class TicketController extends AbstractController
 
     /**
      * @Route("/{id}", name="ticket_show", methods={"GET"})
+     * @param Ticket $ticket
+     * @return Response
      */
     public function show(Ticket $ticket): Response
     {
-
         return $this->render('ticket/show.html.twig', [
             'ticket' => $ticket,
             'roles'=>User::roles,
@@ -105,6 +112,8 @@ class TicketController extends AbstractController
 
     /**
      * @Route("/{id}/close", name="ticket_close", methods={"GET"})
+     * @param Ticket $ticket
+     * @return Response
      */
     public function close(Ticket $ticket): Response
     {
@@ -116,6 +125,11 @@ class TicketController extends AbstractController
 
     /**
      * @Route("/{id}/escalate", name="ticket_escalate", methods={"GET", "POST"})
+     * @param Ticket $ticket
+     * @param UserRepository $userRepository
+     * @param Request $request
+     * @param UserInterface $userInterface
+     * @return Response
      */
     public function escalate(Ticket $ticket, UserRepository $userRepository, Request $request, UserInterface $userInterface): Response
     {
@@ -136,6 +150,11 @@ class TicketController extends AbstractController
 
     /**
      * @Route("/{id}/reassign", name="ticket_reassign", methods={"GET", "POST"})
+     * @Security("is_granted('ROLE_MANAGER')")
+     * @param Ticket $ticket
+     * @param UserRepository $userRepository
+     * @param Request $request
+     * @return Response
      */
     public function reassign(Ticket $ticket, UserRepository $userRepository, Request $request): Response
     {
@@ -157,6 +176,12 @@ class TicketController extends AbstractController
 
     /**
      * @Route("/{id}/wontfix", name="ticket_wontfix", methods={"GET", "POST"})
+     * @Security("is_granted('ROLE_MANAGER')")
+     * @param Ticket $ticket
+     * @param Request $request
+     * @param UserInterface $userInterface
+     * @param UserRepository $userRepository
+     * @return Response
      */
     public function wontfix(Ticket $ticket, Request $request, userInterface $userInterface, userRepository $userRepository): Response
     {
@@ -181,6 +206,8 @@ class TicketController extends AbstractController
 
     /**
      * @Route("/{id}/reopen", name="ticket_reopen", methods={"GET"})
+     * @param Ticket $ticket
+     * @return Response
      */
     public function reopen(Ticket $ticket): Response
     {
@@ -226,6 +253,9 @@ class TicketController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="ticket_edit", methods={"GET","POST"})
+     * @param Request $request
+     * @param Ticket $ticket
+     * @return Response
      */
     public function edit(Request $request, Ticket $ticket): Response
     {
@@ -269,6 +299,9 @@ class TicketController extends AbstractController
 
     /**
      * @Route("/{id}/priority", name="ticket_priority", methods={"GET","POST"})
+     * @Security("is_granted('ROLE_MANAGER')")
+     * @param Request $request
+     * @param Ticket $ticket
      * @return Response
      */
     public function priority(Request $request, Ticket $ticket): Response
@@ -287,6 +320,9 @@ class TicketController extends AbstractController
 
     /**
      * @Route("/{id}", name="ticket_delete", methods={"DELETE"})
+     * @param Request $request
+     * @param Ticket $ticket
+     * @return Response
      */
     public function delete(Request $request, Ticket $ticket): Response
     {
