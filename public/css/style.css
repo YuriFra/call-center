@@ -242,3 +242,8 @@ h6{
     width: 450px;
     height: 380px;
 }
+/* show user */
+#showUser {
+    width: 400px;
+    margin: 0 auto;
+}
