@@ -31,16 +31,21 @@ RegistrationController extends AbstractController
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, UserAuthenticator $authenticator): Response
     {
+        $loggedInUser=$this->getUser();
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if(in_array(User::roles['MANAGER'],$loggedInUser->getRoles())){
+                $user->setRoles(explode(',',$request->request->get('agents')));
+            }
             // encode the plain password
             $user->setPassword(
                 $passwordEncoder->encodePassword(
                     $user,
-                    $form->get('plainPassword')->getData()
+                    $form->get('plainPassword')->getData(),
+
                 )
             );
 
@@ -68,6 +73,7 @@ RegistrationController extends AbstractController
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
+            'ROLES'=>User::roles,
         ]);
     }
 

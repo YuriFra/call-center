@@ -103,10 +103,12 @@ class TicketController extends AbstractController
         // if($this->getUser()->getId() !== $ticket->getUser()->getid()) {
            // throw new Exception('404');
         //}
+        $user=$this->getUser();
 
         return $this->render('ticket/show.html.twig', [
             'ticket' => $ticket,
             'roles'=>User::roles,
+            'user'=>$user
         ]);
     }
 

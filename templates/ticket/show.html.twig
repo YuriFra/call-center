@@ -11,7 +11,9 @@
         <h1 class="mt-5">Ticket</h1>
         <div class="ticket-navigation d-flex justify-content-between mt-5 mb-3">
             <a class="btn btn-light" href="{{ path('ticket_index') }}"><i class="fa fa-long-arrow-alt-left fa-icons"></i> Back to list</a>
+            {% if user.roles|length ==1 %}
             <a class="btn btn-edit"href="{{ path('ticket_edit', {'id': ticket.id}) }}"><i class="fa fa-pen fa-icons"></i> Edit</a>
+            {% endif %}
         </div>
 
         <div class="card ticket">
@@ -29,7 +31,9 @@
             </div>
         </div>
 
+        {% if user.roles|length ==1 %}
         {{ include('ticket/_delete_form.html.twig') }}
+        {% endif %}
         <br>
         <h2 class="mt-5">Comments</h2>
         <ul class="list-group mb-5">

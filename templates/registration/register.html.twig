@@ -34,6 +34,12 @@
                 {{ form_widget(registrationForm.plainPassword, {
                     label: 'Password'
                 }) }}
+                {% if app.user and  ROLES['MANAGER'] in app.user.roles %}
+                    <select class="form-control" name="agents">
+                        <option value="ROLE_USER,ROLE_AGENT">First Line Agent</option>
+                        <option value="ROLE_USER,ROLE_AGENT,ROLE_PREMIUM_AGENT">Second Line Agent</option>
+                    </select>
+                {% endif %}
             </div>
     {{ form_row(registrationForm.agreeTerms) }}
     <button type="submit" class="btn" id="registerbtn">Register</button>
