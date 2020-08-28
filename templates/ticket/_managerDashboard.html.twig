@@ -11,23 +11,28 @@
     <a class="btn text-white" id="signin" href="#overviewTickets">Go to ticket overview</a>
     <br>
     <div class="mb-5 " >
-        <div id="stats" class=" row mt-5 mb-5 d-flex justify-content-center justify-content-around">
-            <figure class="col-6">
-                <i class="fa fa-ticket-alt"></i>
-                <p>Open tickets: {{ dashboard.getCounterOpen() }}</p>
-            </figure>
-           <figure class="col-6">
-               <i class="fa fa-check-square"></i>
-               <p>Closed tickets: {{ dashboard.getCounterClosed() }}</p>
-           </figure>
-           <figure class="col-6">
-               <i class="fa fa-lock-open"></i>
-               <p>Re-opened tickets: {{ dashboard.getCounterReopened() }}</p>
-           </figure>
-           <figure class="col-6">
-               <i class="fa fa-percent"></i>
-               <p>% re-opened tickets: {{ dashboard.getPercent() }}</p>
-           </figure>
+        <div id="stats" class=" row mt-5 mb-5 d-flex justify-content-around">
+
+              <figure class="">
+                  <i class="action fa fa-ticket-alt"></i>
+                  <p>Open tickets: {{ dashboard.getCounterOpen() }}</p>
+              </figure>
+              <figure class="">
+                  <i class=" action fa fa-check-square"></i>
+                  <p>Closed tickets: {{ dashboard.getCounterClosed() }}</p>
+              </figure>
+
+
+              <figure class="">
+                  <i class=" action fa fa-lock-open"></i>
+                  <p>Re-opened tickets: {{ dashboard.getCounterReopened() }}</p>
+              </figure>
+              <figure class="">
+                  <i class=" action fa fa-percent"></i>
+                  <p>% re-opened tickets: {{ dashboard.getPercent() }}</p>
+              </figure>
+
+
 
         </div>
     </div>
