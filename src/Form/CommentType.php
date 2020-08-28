@@ -14,7 +14,7 @@ class CommentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('comment', TextType::class, array('attr' => array('class' => 'form-control')))
+            ->add('comment', TextType::class, array('attr' => array('class' => 'form-control', 'placeholder' => 'comment')))
             ->add('private', CheckboxType::class, [
                 'label'    => 'private',
                 'required' => false,
