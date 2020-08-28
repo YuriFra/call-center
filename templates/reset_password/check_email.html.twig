@@ -1,7 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Password Reset Email Sent{% endblock %}
-
+{% block nav %}
+    <nav class="navbar navbar-light justify-content-between">
+        <a href="{{ path('ticket_index') }}" class="navbar-brand">
+            <img src="https://i.ibb.co/nLCPYRd/grace-logo.png" alt="grace-logo" width="125" class="d-inline-block align-middle mr-2">
+        </a>
+    </nav>
+{% endblock %}
 {% block body %}
     <div class="row d-flex justify-content-center">
         <div id="reset" class="form">
