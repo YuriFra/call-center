@@ -1,7 +1,17 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Log in!{% endblock %}
-
+{% block nav %}
+    <nav class="navbar navbar-light justify-content-between">
+        <a href="#" class="navbar-brand">
+            <img src="https://i.ibb.co/nLCPYRd/grace-logo.png" alt="grace-logo" width="125" class="d-inline-block align-middle mr-2">
+        </a>
+        <form class="form-inline">
+            <a href="{{ path('app_login') }}" class="btn my-2 my-sm-0" type="submit" id="signin">Sign in</a>
+            <a href="{{ path('app_register') }}" class="btn my-2 my-sm-0" type="submit" id="signup">Sign up</a>
+        </form>
+    </nav>
+{% endblock %}
 {% block body %}
 <form method="post">
     {% if error %}
@@ -13,16 +23,37 @@
             You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
         </div>
     {% endif %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm" id="registerintro">
+                <h1>Sign in to <br>
+                your Grace account. </h1>
+                <h3>Welcome dear customer. Do you need some help with an issue? Grace can help you. Just log in.
+                <br>
 
+                </h3>
+            </div>
+    <div class="col-sm" id="registerform">
     <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputUsername">Username</label>
-    <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" required autofocus>
-    <label for="inputPassword">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" required>
+    <hr>
+    <label for="inputUsername"></label>
+    <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" placeholder="your username" required autofocus>
+    <label for="inputPassword"></label>
+    <input type="password" name="password" id="inputPassword" class="form-control" placeholder="your password" required>
 
-    <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+        <button class="btn btn-lg btn-primary" id="signinbutton" type="submit">
+            Sign in
+        </button>
+        <br>
+        <a href="/reset-password">Reset password</a>
+        <a href="{{ path("app_register") }}">Register</a>
+
+</form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
 
     {#
         Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
@@ -35,10 +66,4 @@
         </div>
     #}
 
-    <button class="btn btn-lg btn-primary" type="submit">
-        Sign in
-    </button>
-    <a href="/reset-password">Reset password</a>
-    <a href="{{ path("app_register") }}">Register</a>
-</form>
-{% endblock %}
+

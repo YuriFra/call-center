@@ -1,13 +1,40 @@
-<section id="dashboard">
 
-    <h1>DASHBOARD</h1>
-    <a href="{{ path('user_index') }}">Go to all Agents and Users</a>
+    <link rel="stylesheet" href="{{ app.request.baseUrl }}/css/ticket_index.css">
+
+
+
+<section id="dashboard" class="container text-center mt-5">
+
+    <h1 class="mt-5">Dashboard: Stats</h1>
+
+    <a class="btn text-white" id="signin" href="{{ path('user_index') }}">Go to all Agents and Users</a>
+    <a class="btn text-white" id="signin" href="#overviewTickets">Go to ticket overview</a>
     <br>
-    <h3>Statistics</h3>
-    <ul>
-        <li>Open tickets: {{ dashboard.getCounterOpen() }}</li>
-        <li>Closed tickets: {{ dashboard.getCounterClosed() }}</li>
-        <li>Re-opened tickets: {{ dashboard.getCounterReopened() }}</li>
-        <li>% re-opened tickets: {{ dashboard.getPercent() }}</li>
-    </ul>
+    <div class="mb-5 " >
+        <div id="stats" class=" row mt-5 mb-5 d-flex justify-content-around">
+
+              <figure class="">
+                  <i class="action fa fa-ticket-alt"></i>
+                  <p>Open tickets: {{ dashboard.getCounterOpen() }}</p>
+              </figure>
+              <figure class="">
+                  <i class=" action fa fa-check-square"></i>
+                  <p>Closed tickets: {{ dashboard.getCounterClosed() }}</p>
+              </figure>
+
+
+              <figure class="">
+                  <i class=" action fa fa-lock-open"></i>
+                  <p>Re-opened tickets: {{ dashboard.getCounterReopened() }}</p>
+              </figure>
+              <figure class="">
+                  <i class=" action fa fa-percent"></i>
+                  <p>% re-opened tickets: {{ dashboard.getPercent() }}</p>
+              </figure>
+
+
+
+        </div>
+    </div>
+
 </section>
