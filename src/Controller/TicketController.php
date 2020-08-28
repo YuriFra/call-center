@@ -9,15 +9,17 @@ use App\Entity\User;
 use App\Form\CommentType;
 use App\Form\ResponseCustomerType;
 use App\Form\TicketType;
+use App\Repository\CommentRepository;
 use App\Repository\TicketRepository;
 use App\Repository\UserRepository;
 use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @Route("/ticket")
@@ -27,20 +29,19 @@ class TicketController extends AbstractController
     /**
      * @Route("/", name="ticket_index", methods={"GET"})
      * @param TicketRepository $ticketRepository
-     * @param UserInterface $userInterface
      * @param UserRepository $userRepository
      * @return Response
      */
-    public function index(TicketRepository $ticketRepository, UserInterface $userInterface, UserRepository $userRepository): Response
+    public function index(TicketRepository $ticketRepository): Response
     {
-        $user = $userRepository->findOneBy(['username' => $userInterface->getUsername()]);
-        $tickets=$ticketRepository->showTickets($userInterface, $user);
+        $user = $this->getUser();
+        $tickets=$ticketRepository->showTickets($user);
         $dashBoard = new DashBoard($ticketRepository);
-        usort($tickets, function ($ticket1, $ticket2){
+        /*usort($tickets, function ($ticket1, $ticket2){
             $pos_a = array_search($ticket1->getPriority(), Ticket::priorities, true);
             $pos_b = array_search($ticket2->getPriority(), Ticket::priorities, true);
             return $pos_b-$pos_a;
-        });
+        });*/
 
         return $this->render('ticket/index.html.twig', [
             'tickets' => $tickets,
@@ -54,18 +55,16 @@ class TicketController extends AbstractController
     /**
      * @Route("/new", name="ticket_new", methods={"GET","POST"})
      * @param Request $request
-     * @param UserInterface $userInterface
-     * @param UserRepository $userRepository
      * @return Response
      */
-    public function new(Request $request, UserInterface $userInterface, UserRepository $userRepository): Response
+    public function new(Request $request): Response
     {
         $ticket = new Ticket();
         $form = $this->createForm(TicketType::class, $ticket);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user=$userRepository->findOneBy(["username"=>$userInterface->getUsername()]);
+            $user=$this->getUser();
             $ticket->setUser($user);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($ticket);
@@ -104,6 +103,10 @@ class TicketController extends AbstractController
      */
     public function show(Ticket $ticket): Response
     {
+        // if($this->getUser()->getId() !== $ticket->getUser()->getid()) {
+           // throw new Exception('404');
+        //}
+
         return $this->render('ticket/show.html.twig', [
             'ticket' => $ticket,
             'roles'=>User::roles,
@@ -118,7 +121,7 @@ class TicketController extends AbstractController
     public function close(Ticket $ticket): Response
     {
         $ticket->setStatus(Ticket::status['closed']);
-        $ticket->setClosed(new DateTime());
+        $ticket->setClosed(new \DateTimeImmutable());
         $this->getDoctrine()->getManager()->flush();
         return $this->redirectToRoute('ticket_index');
     }
@@ -128,13 +131,12 @@ class TicketController extends AbstractController
      * @param Ticket $ticket
      * @param UserRepository $userRepository
      * @param Request $request
-     * @param UserInterface $userInterface
      * @return Response
      */
-    public function escalate(Ticket $ticket, UserRepository $userRepository, Request $request, UserInterface $userInterface): Response
+    public function escalate(Ticket $ticket, UserRepository $userRepository, Request $request): Response
     {
         $users = $userRepository->findAll();
-        $loggedInUser=$userRepository->findOneBy(["username"=>$userInterface->getUsername()]);
+        $loggedInUser=$this->getUser();
         if($request->request->get('premiumAgents')){
             $ticket->setAgentId($request->request->get('premiumAgents'));
             $ticket->setEscalated(true);
@@ -158,7 +160,7 @@ class TicketController extends AbstractController
      */
     public function reassign(Ticket $ticket, UserRepository $userRepository, Request $request): Response
     {
-        $users = $userRepository->findAll();
+        $users = $userRepository->findAll();//@todo filter here
         $user = $userRepository->findOneBy(['id' => $ticket->getAgentId()]);
 
         if($request->request->get('agents')){
@@ -179,18 +181,16 @@ class TicketController extends AbstractController
      * @Security("is_granted('ROLE_MANAGER')")
      * @param Ticket $ticket
      * @param Request $request
-     * @param UserInterface $userInterface
-     * @param UserRepository $userRepository
      * @return Response
      */
-    public function wontfix(Ticket $ticket, Request $request, userInterface $userInterface, userRepository $userRepository): Response
+    public function wontfix(Ticket $ticket, Request $request): Response
     {
         if($request->request->get('wontfixReason')){
             $ticket->setStatus(Ticket::status["closed"]);
-            $ticket->setClosed(new DateTime());
+            $ticket->setClosed(new \DateTimeImmutable());
             $ticket->setWontFix($request->request->get('wontfixReason'));
-            $comment = new Comment();
-            $user = $userRepository->findOneBy(['username'=> $userInterface->getUsername()]);
+            $comment = new Comment();// Comment::create($user, $ticket, $text);
+            $user = $this->getUser();
             $comment->setComment($request->request->get('wontfixReason'));
             $comment->setUser($user);
             $comment->setTicket($ticket);
@@ -221,21 +221,19 @@ class TicketController extends AbstractController
     /**
      * @Route("/{id}/comment", name="ticket_comment", methods={"GET","POST"})
      * @param Request $request
-     * @param UserRepository $userRepository
-     * @param UserInterface $userInterface
      * @param Ticket $ticket
      * @return Response
      */
-    public function addComment(Request $request, UserRepository $userRepository, UserInterface $userInterface, Ticket $ticket): Response
+    public function addComment(Request $request, Ticket $ticket): Response
     {
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
 
-        $user = $userRepository->findOneBy(['username' => $userInterface->getUsername()]);
+        $user = $this->getUser();
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $comment->setCommentProperties($form,$user,$ticket,$userInterface);
+            $comment->setCommentProperties($form,$user,$ticket);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($comment);
             $entityManager->flush();
@@ -308,7 +306,7 @@ class TicketController extends AbstractController
     {
         if ($request->request->get('priorities')) {
             $ticket->setPriority($request->request->get('priorities'));
-           $this->getDoctrine()->getManager()->flush();
+            $this->getDoctrine()->getManager()->flush();
             return $this->redirectToRoute('ticket_index');
         }
 
@@ -329,6 +327,11 @@ class TicketController extends AbstractController
 
         if ($this->isCsrfTokenValid('delete'.$ticket->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
+            $comments= $ticket->getComments();
+            foreach ($comments as $comment){
+                $entityManager->remove($comment);
+            }
+
             $entityManager->remove($ticket);
             $entityManager->flush();
         }
@@ -338,10 +341,12 @@ class TicketController extends AbstractController
 
     /**
      * @Route("/{id}/{user_id}", name="ticket_assign", methods={"GET"})
+     * @param Ticket $ticket
+     * @return RedirectResponse
      */
-    public function assignTicket(Ticket $ticket, UserInterface $userInterface, UserRepository $userRepository): \Symfony\Component\HttpFoundation\RedirectResponse
+    public function assignTicket(Ticket $ticket): RedirectResponse
     {
-        $user=$userRepository->findOneBy(["username"=>$userInterface->getUsername()]);
+        $user=$this->getUser();
         $ticket->setStatus(Ticket::status['in progress']);
         $ticket->setAgentId($user->getId());
         $this->getDoctrine()->getManager()->flush();

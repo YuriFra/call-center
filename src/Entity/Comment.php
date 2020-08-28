@@ -105,13 +105,13 @@ class Comment
 
 
     //@todo refactor
-    public function setCommentProperties(Form $form, User $user, Ticket $ticket, UserInterface $userInterface): void
+    public function setCommentProperties(Form $form, User $user, Ticket $ticket): void
     {
         $data = $form->getData();
         $this->setUser($user);
         $this->setTicket($ticket);
 
-        if (in_array(User::roles["FLA"], $userInterface->getRoles())) {
+        if (in_array(User::roles["FLA"], $user->getRoles(), true)) {
             $this->setPrivate($data->getPrivate());
 
             if ($ticket->getStatus() === Ticket::status['in progress'] && $data->getPrivate() === false) {

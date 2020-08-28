@@ -62,7 +62,6 @@ class DashBoard
      */
     private function countOpen(array $tickets): void
     {
-
         foreach ($tickets as $ticket) {
             if ($ticket->getStatus() === 'open') {
                 ++$this->counterOpen;

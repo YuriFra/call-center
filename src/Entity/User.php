@@ -15,7 +15,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface
 {
-
     public const roles=["USER"=>"ROLE_USER", "FLA"=>"ROLE_AGENT","SLA"=>"ROLE_PREMIUM_AGENT", "MANAGER"=>"ROLE_MANAGER" ];
     /**
      * @ORM\Id()
@@ -49,6 +48,7 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="user")
      */
     private $comments;
+
 
     /**
      * @ORM\Column(type="string", length=255)

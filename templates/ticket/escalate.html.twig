@@ -3,18 +3,24 @@
 {% block title %}Escalate Ticket{% endblock %}
 
 {% block body %}
-    <h1>Escalate ticket</h1>
-
-    <form method="post">
-        <select name="premiumAgents">
-            {% for user in users %}
-                {% if roles['SLA'] in user.roles and  roles['MANAGER'] not in user.roles and  user.username != loggedInUser.username   %}
-                    <option value="{{ user.id }}">{{ user.username }}</option>
-                {% endif %}
-            {% endfor %}
-        </select>
-        <button type="submit" name="save">Assign Second Line Agent</button>
-    </form>
-
-    <a href="{{ path('ticket_index') }}">back to list</a>
+    <div class="row d-flex justify-content-center">
+        <div id="escalate" class="form">
+            <h1 class="h3 mb-2 font-weight-normal">Escalate ticket</h1>
+            <hr>
+            <br>
+            <form method="post">
+                <div class="form-group">
+                    <select class="form-control" name="premiumAgents">
+                        {% for user in users %}
+                            {% if roles['SLA'] in user.roles and  roles['MANAGER'] not in user.roles and  user.username != loggedInUser.username   %}
+                                <option value="{{ user.id }}">{{ user.username }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <button class="btn mb-3" id="saveBtn" type="submit" name="save">Assign Second Line Agent</button>
+            </form>
+            <a class="text-center mt-2" href="{{ path('ticket_index') }}">back to list</a>
+        </div>
+    </div>
 {% endblock %}

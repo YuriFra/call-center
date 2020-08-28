@@ -1,0 +1,41 @@
+#date{
+    font-size: 10px;
+    margin: 0;
+}
+
+.ticket{
+    font-family: 'Oldenburg', cursive;
+}
+#state{
+    border: 1px solid  #88bbb7;
+    border-radius:2rem;
+    background-color: #88bbb7;
+    color: #fff;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 0.5rem;
+    padding-top: 0.5rem;
+
+
+}
+
+.card-titel{
+    color: #88bbb7;
+}
+
+#pilletje, .pilletje{
+    background-color: #88bbb7;
+    color: #fff;
+}
+
+.action {
+    color: #db9a9a;
+}
+
+.action:hover{
+    color:  #FF3636;
+}
+
+#stats {
+    font-size: 2rem;
+}

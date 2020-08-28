@@ -3,14 +3,17 @@
 {% block title %}Mark ticket as "Won't fix"{% endblock %}
 
 {% block body %}
-    <h1>Mark ticket as "Won't fix"</h1>
-
+<div class="row d-flex justify-content-center">
+    <div id="fix" class="form">
+        <h1 class="h3 mb-2 font-weight-normal">Mark ticket as "Won't fix"</h1>
+        <hr>
+        <br>
     <form method="post">
         <label for="wontfixReason">Won't be fixed because:</label>
-        <input type="text" name="wontfixReason" id="wontfixReason">
-        <button type="submit">Mark as won't fix</button>
+        <input class="form-control" type="text" name="wontfixReason" id="wontfixReason" placeholder="message">
+        <button class="btn my-3" id="saveBtn" type="submit">Mark as won't fix</button>
     </form>
-
-    <a href="{{ path('ticket_index') }}">back to list</a>
-
+    <a  class="text-center mt-2" href="{{ path('ticket_index') }}">back to list</a>
+    </div>
+</div>
 {% endblock %}
