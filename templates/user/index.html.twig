@@ -1,74 +1,84 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}User index{% endblock %}
+ {% block stylesheets %}
+     {{ parent() }}
+     <link rel="stylesheet" href="{{ app.request.baseUrl }}/css/ticket_index.css">
 
+ {% endblock %}
 {% block body %}
-    <h1>Agent Overview</h1>
+    <div class="container">
+<div class="text-center my-5">
+    <a  class="btn text-white" id="signin" href="{{ path('app_register') }}">Create new User</a>
+    <a  class="btn text-white" id="signin" href="{{ path('ticket_index') }}">Go back to dashboard</a>
+</div>
 
-    <table class="table">
-        <thead>
+        <h1 class="my-2">Agent Overview</h1>
+        <table class="table">
+            <thead>
             <tr>
                 <th>Id</th>
                 <th>Username</th>
                 <th>Roles</th>
-                <th>Password</th>
                 <th>actions</th>
             </tr>
-        </thead>
-        <tbody>
-        {% for user in users %}
-            {% if roles['FLA'] in user.roles and roles['MANAGER'] not in user.roles %}
-            <tr>
-                <td>{{ user.id }}</td>
-                <td>{{ user.username }}</td>
-                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-                <td>
-                    <a href="{{ path('user_show', {'id': user.id}) }}">show</a>
-                    <a href="{{ path('user_edit', {'id': user.id}) }}">edit</a>
-                </td>
-            </tr>
-            {% endif %}
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    <h1>Customers overview</h1>
-    <table class="table">
-        <thead>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                {% if roles['FLA'] in user.roles and roles['MANAGER'] not in user.roles %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.roles|join(', ', ' and ') }}</td>
+                        <td>
+                            <a class="action" href="{{ path('user_show', {'id': user.id}) }}">| show |</a>
+                            <a class="action" href="{{ path('user_edit', {'id': user.id}) }}"> edit | </a>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% else %}
+                <tr>
+                    <td colspan="5">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        <h1 class="my-2">Customers overview</h1>
+        <table class="table">
+            <thead>
             <tr>
                 <th>Id</th>
                 <th>Username</th>
                 <th>Roles</th>
-                <th>Password</th>
                 <th>actions</th>
             </tr>
-        </thead>
-        <tbody>
-        {% for user in users %}
-            {% if user.roles|length==1 %}
-            <tr>
-                <td>{{ user.id }}</td>
-                <td>{{ user.username }}</td>
-                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-                <td>
-                    <a href="{{ path('user_show', {'id': user.id}) }}">show</a>
-                    {% if roles['FLA'] in user.roles %}
-                    <a href="{{ path('user_edit', {'id': user.id}) }}">edit</a>
-                        {% endif %}
-                </td>
-            </tr>
-            {% endif %}
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                {% if user.roles|length==1 %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.roles|join(', ', ' and ') }}</td>
+                        <td>
+                            <a class="action"  href="{{ path('user_show', {'id': user.id}) }}">| show |</a>
+                            {% if roles['FLA'] in user.roles %}
+                                <a class="action"  href="{{ path('user_edit', {'id': user.id}) }}"> edit |</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
+            {% else %}
+                <tr>
+                    <td colspan="5">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <br>
+    <br>
 
-    <a href="{{ path('app_register') }}">Create new</a>
-    <a href="{{ path('ticket_index') }}">Go back to dashboard</a>
+
 {% endblock %}
