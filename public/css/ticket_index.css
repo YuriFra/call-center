@@ -39,3 +39,24 @@
 #stats {
     font-size: 2rem;
 }
+
+#dashboard {
+    margin-bottom: 150px;
+}
+
+.dashboard-stats-card {
+    border-radius: calc(.25rem - 1px);
+    width: 45%;
+}
+
+.stats-icon {
+    font-size: 2rem;
+}
+
+.stats-title {
+    font-family: 'Oldenburg', cursive;
+}
+
+.card-span {
+    font-family: 'Oldenburg', cursive;
+}
