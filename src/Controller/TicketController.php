@@ -11,12 +11,12 @@ use App\Form\ResponseCustomerType;
 use App\Form\TicketType;
 use App\Repository\TicketRepository;
 use App\Repository\UserRepository;
-use DateTime;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @Route("/ticket")
@@ -26,14 +26,12 @@ class TicketController extends AbstractController
     /**
      * @Route("/", name="ticket_index", methods={"GET"})
      * @param TicketRepository $ticketRepository
-     * @param UserInterface $userInterface
      * @param UserRepository $userRepository
      * @return Response
      */
-    public function index(TicketRepository $ticketRepository, UserInterface $userInterface, UserRepository $userRepository): Response
+    public function index(TicketRepository $ticketRepository, UserRepository $userRepository): Response
     {
-//        $user = $this->getUser();
-        $user = $userRepository->findOneBy(['username' => $userInterface->getUsername()]);
+         $user = $this->getUser();
         $tickets=$ticketRepository->showTickets($user);
         $dashBoard = new DashBoard($ticketRepository);
         /*usort($tickets, function ($ticket1, $ticket2){
@@ -56,14 +54,14 @@ class TicketController extends AbstractController
     /**
      * @Route("/new", name="ticket_new", methods={"GET","POST"})
      */
-    public function new(Request $request, UserInterface $userInterface, UserRepository $userRepository): Response
+    public function new(Request $request): Response
     {
         $ticket = new Ticket();
         $form = $this->createForm(TicketType::class, $ticket);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user=$userRepository->findOneBy(["username"=>$userInterface->getUsername()]);
+            $user=$this->getUser();
             $ticket->setUser($user);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($ticket);
@@ -98,9 +96,9 @@ class TicketController extends AbstractController
      */
     public function show(Ticket $ticket): Response
     {
-        if($this->getUser()->getId() !== $ticket->getUser()->getid()) {
-            throw new Exception('404');
-        }
+        // if($this->getUser()->getId() !== $ticket->getUser()->getid()) {
+           // throw new Exception('404');
+        //}
 
         return $this->render('ticket/show.html.twig', [
             'ticket' => $ticket,
@@ -122,10 +120,10 @@ class TicketController extends AbstractController
     /**
      * @Route("/{id}/escalate", name="ticket_escalate", methods={"GET", "POST"})
      */
-    public function escalate(Ticket $ticket, UserRepository $userRepository, Request $request, UserInterface $userInterface): Response
+    public function escalate(Ticket $ticket, UserRepository $userRepository, Request $request): Response
     {
         $users = $userRepository->findAll();
-        $loggedInUser=$userRepository->findOneBy(["username"=>$userInterface->getUsername()]);
+        $loggedInUser=$this->getUser();
         if($request->request->get('premiumAgents')){
             $ticket->setAgentId($request->request->get('premiumAgents'));
             $ticket->setEscalated(true);
@@ -163,14 +161,14 @@ class TicketController extends AbstractController
     /**
      * @Route("/{id}/wontfix", name="ticket_wontfix", methods={"GET", "POST"})
      */
-    public function wontfix(Ticket $ticket, Request $request, userInterface $userInterface, userRepository $userRepository): Response
+    public function wontfix(Ticket $ticket, Request $request): Response
     {
         if($request->request->get('wontfixReason')){
             $ticket->setStatus(Ticket::status["closed"]);
-            $ticket->setClosed(new DateTime());
+            $ticket->setClosed(new \DateTimeImmutable());
             $ticket->setWontFix($request->request->get('wontfixReason'));
             $comment = new Comment();// Comment::create($user, $ticket, $text);
-            $user = $userRepository->findOneBy(['username'=> $userInterface->getUsername()]);
+            $user = $this->getUser();
             $comment->setComment($request->request->get('wontfixReason'));
             $comment->setUser($user);
             $comment->setTicket($ticket);
@@ -200,20 +198,19 @@ class TicketController extends AbstractController
      * @Route("/{id}/comment", name="ticket_comment", methods={"GET","POST"})
      * @param Request $request
      * @param UserRepository $userRepository
-     * @param UserInterface $userInterface
      * @param Ticket $ticket
      * @return Response
      */
-    public function addComment(Request $request, UserRepository $userRepository, UserInterface $userInterface, Ticket $ticket): Response
+    public function addComment(Request $request, Ticket $ticket): Response
     {
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
 
-        $user = $userRepository->findOneBy(['username' => $userInterface->getUsername()]);
+        $user = $this->getUser();
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $comment->setCommentProperties($form,$user,$ticket,$userInterface);
+            $comment->setCommentProperties($form,$user,$ticket);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($comment);
             $entityManager->flush();
@@ -308,9 +305,9 @@ class TicketController extends AbstractController
     /**
      * @Route("/{id}/{user_id}", name="ticket_assign", methods={"GET"})
      */
-    public function assignTicket(Ticket $ticket, UserInterface $userInterface, UserRepository $userRepository): \Symfony\Component\HttpFoundation\RedirectResponse
+    public function assignTicket(Ticket $ticket): \Symfony\Component\HttpFoundation\RedirectResponse
     {
-        $user=$userRepository->findOneBy(["username"=>$userInterface->getUsername()]);
+        $user=$this->getUser();
         $ticket->setStatus(Ticket::status['in progress']);
         $ticket->setAgentId($user->getId());
         $this->getDoctrine()->getManager()->flush();

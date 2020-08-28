@@ -51,7 +51,7 @@ class TicketRepository extends ServiceEntityRepository
     */
 
     public function showTickets(User $user){
-        $allTickets= $this->findBy([], ['priority']);
+        $allTickets= $this->findBy([], ['priority' => 'ASC' ]);
         $tickets=[];
         foreach ($allTickets as $ticket) {
             if ($ticket->canView($user)) {
