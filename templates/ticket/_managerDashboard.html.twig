@@ -10,30 +10,34 @@
     <a class="btn text-white" id="signin" href="{{ path('user_index') }}">Go to all Agents and Users</a>
     <a class="btn text-white" id="signin" href="#overviewTickets">Go to ticket overview</a>
     <br>
-    <div class="mb-5 " >
-        <div id="stats" class=" row mt-5 mb-5 d-flex justify-content-around">
-
-              <figure class="">
-                  <i class="action fa fa-ticket-alt"></i>
-                  <p>Open tickets: {{ dashboard.getCounterOpen() }}</p>
-              </figure>
-              <figure class="">
-                  <i class=" action fa fa-check-square"></i>
-                  <p>Closed tickets: {{ dashboard.getCounterClosed() }}</p>
-              </figure>
-
-
-              <figure class="">
-                  <i class=" action fa fa-lock-open"></i>
-                  <p>Re-opened tickets: {{ dashboard.getCounterReopened() }}</p>
-              </figure>
-              <figure class="">
-                  <i class=" action fa fa-percent"></i>
-                  <p>% re-opened tickets: {{ dashboard.getPercent() }}</p>
-              </figure>
-
-
-
+    <div class="d-flex flex-wrap dashboard-stats my-5">
+        <div class="card dashboard-stats-card m-3">
+            <div class="card-body bg-light p-5">
+                <i class="action fa fa-ticket-alt stats-icon"></i>
+                <h5 class="stats-title my-4">Open tickets</h5>
+                <span class="card-span">{{ dashboard.getCounterOpen() }}</span>
+            </div>
+        </div>
+        <div class="card dashboard-stats-card m-3">
+            <div class="card-body bg-light p-5">
+                <i class=" action fa fa-check-square stats-icon"></i>
+                <h5 class="stats-title my-4">Closed tickets</h5>
+                <span class="card-span">{{ dashboard.getCounterClosed() }}</span>
+            </div>
+        </div>
+        <div class="card dashboard-stats-card m-3">
+            <div class="card-body bg-light p-5">
+                <i class=" action fa fa-lock-open stats-icon"></i>
+                <h5 class="stats-title my-4">Re-opened tickets</h5>
+                <span class="card-span">{{ dashboard.getCounterReopened() }}</span>
+            </div>
+        </div>
+        <div class="card dashboard-stats-card m-3">
+            <div class="card-body bg-light p-5">
+                <i class=" action fa fa-percent stats-icon"></i>
+                <h5 class="stats-title my-4">% re-opened tickets</h5>
+                <span class="card-span">{{ dashboard.getPercent() }} %</span>
+            </div>
         </div>
     </div>
 
