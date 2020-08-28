@@ -1,3 +1,8 @@
+
+    <link rel="stylesheet" href="{{ app.request.baseUrl }}/css/ticket_index.css">
+
+
+
 <section id="dashboard" class="container text-center mt-5">
 
     <h1 class="mt-5">Dashboard: Stats</h1>
@@ -6,20 +11,20 @@
     <a class="btn text-white" id="signin" href="#overviewTickets">Go to ticket overview</a>
     <br>
     <div class="mb-5 " >
-        <div id="stats" class="mt-5 mb-5 d-flex justify-content-center justify-content-around">
-            <figure>
+        <div id="stats" class=" row mt-5 mb-5 d-flex justify-content-center justify-content-around">
+            <figure class="col-6">
                 <i class="fa fa-ticket-alt"></i>
                 <p>Open tickets: {{ dashboard.getCounterOpen() }}</p>
             </figure>
-           <figure>
+           <figure class="col-6">
                <i class="fa fa-check-square"></i>
                <p>Closed tickets: {{ dashboard.getCounterClosed() }}</p>
            </figure>
-           <figure>
+           <figure class="col-6">
                <i class="fa fa-lock-open"></i>
                <p>Re-opened tickets: {{ dashboard.getCounterReopened() }}</p>
            </figure>
-           <figure>
+           <figure class="col-6">
                <i class="fa fa-percent"></i>
                <p>% re-opened tickets: {{ dashboard.getPercent() }}</p>
            </figure>

@@ -36,6 +36,6 @@
     color:  #FF3636;
 }
 
-#stats li{
-    text-decoration: none;
+#stats {
+    font-size: 10rem;
 }
