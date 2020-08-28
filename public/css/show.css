@@ -28,6 +28,10 @@
     color: #f1f2f3;
 }
 
+.fa-icons {
+    margin-right: 10px;
+}
+
 .ticket {
     font-family: 'Oldenburg', cursive;
 }

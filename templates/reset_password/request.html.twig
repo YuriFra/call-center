@@ -1,7 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Reset your password{% endblock %}
-
+{% block nav %}
+    <nav class="navbar navbar-light justify-content-between">
+        <a href="{{ path('ticket_index') }}" class="navbar-brand">
+            <img src="https://i.ibb.co/nLCPYRd/grace-logo.png" alt="grace-logo" width="125" class="d-inline-block align-middle mr-2">
+        </a>
+    </nav>
+{% endblock %}
 {% block body %}
     {% for flashError in app.flashes('reset_password_error') %}
         <div class="alert alert-danger" role="alert">{{ flashError }}</div>
@@ -13,13 +19,13 @@
             <br>
             {{ form_start(requestForm) }}
             {{ form_row(requestForm.email) }}
-            <div>
+            <div class="mt-1">
                 <small>
                     Enter your email address and we will send you a
                     link to reset your password.
                 </small>
             </div>
-            <button class="btn my-3" id="saveBtn">Send password reset email</button>
+            <button class="btn my-3" id="saveBtn">Send</button>
             {{ form_end(requestForm) }}
         </div>
     </div>
