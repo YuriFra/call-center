@@ -1,5 +1,4 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}Log in!{% endblock %}
 {% block nav %}
     <nav class="navbar navbar-light justify-content-between">
@@ -11,9 +10,10 @@
             <a href="{{ path('app_register') }}" class="btn my-2 my-sm-0" type="submit" id="signup">Sign up</a>
         </form>
     </nav>
+<div id="customBack">
 {% endblock %}
 {% block body %}
-<form method="post">
+    <form method="post">
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
@@ -52,6 +52,7 @@
 </form>
             </div>
         </div>
+    </div>
     </div>
 {% endblock %}
 

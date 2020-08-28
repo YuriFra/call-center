@@ -10,6 +10,7 @@
             <a href="{{ path('app_login') }}" class="btn my-2 my-sm-0" type="submit" id="signin">Sign in</a>
         </form>
     </nav>
+<div id="customBack">
 {% endblock %}
 {% block body %}
     {% for flashError in app.flashes('verify_email_error') %}
@@ -40,5 +41,6 @@
     {{ form_end(registrationForm) }}
     </div>
     </div>
+</div>
 </div>
 {% endblock %}
