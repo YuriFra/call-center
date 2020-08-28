@@ -10,7 +10,7 @@ function countUp(maxNum, id, timeInterval) {
         }
     }, timeInterval);
 }
-countUp(212, 'number1', 70);
+countUp(212, 'number1', 10);
 
 
 function countUp3(maxNum, id, timeInterval) {
@@ -25,7 +25,7 @@ function countUp3(maxNum, id, timeInterval) {
         }
     }, timeInterval);
 }
-countUp3(189, 'number2', 50);
+countUp3(189, 'number2', 12);
 
 function countUp2(maxNum, id, timeInterval) {
     let display = 0
@@ -39,4 +39,4 @@ function countUp2(maxNum, id, timeInterval) {
         }
     }, timeInterval);
 }
-countUp2(185, 'number3', 100);
+countUp2(185, 'number3', 20);
