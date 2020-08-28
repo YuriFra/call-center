@@ -9,14 +9,15 @@ use App\Entity\User;
 use App\Form\CommentType;
 use App\Form\ResponseCustomerType;
 use App\Form\TicketType;
-use App\Repository\CommentRepository;
 use App\Repository\TicketRepository;
 use App\Repository\UserRepository;
+use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -24,26 +25,16 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class TicketController extends AbstractController
 {
-
-
-
     /**
      * @Route("/", name="ticket_index", methods={"GET"})
      * @param TicketRepository $ticketRepository
-     * @param UserRepository $userRepository
      * @return Response
      */
-    public function index(TicketRepository $ticketRepository, UserRepository $userRepository): Response
+    public function index(TicketRepository $ticketRepository): Response
     {
-         $user = $this->getUser();
+        $user = $this->getUser();
         $tickets=$ticketRepository->showTickets($user);
         $dashBoard = new DashBoard($ticketRepository);
-        /*usort($tickets, function ($ticket1, $ticket2){
-            $pos_a = array_search($ticket1->getPriority(), Ticket::priorities, true);
-            $pos_b = array_search($ticket2->getPriority(), Ticket::priorities, true);
-            return $pos_b-$pos_a;
-        });*/
-
 
         return $this->render('ticket/index.html.twig', [
             'tickets' => $tickets,
@@ -51,12 +42,13 @@ class TicketController extends AbstractController
             'statuses'=>Ticket::status,
             'roles'=>User::roles,
             'dashboard' => $dashBoard,
-
         ]);
     }
 
     /**
      * @Route("/new", name="ticket_new", methods={"GET","POST"})
+     * @param Request $request
+     * @return Response
      */
     public function new(Request $request): Response
     {
@@ -82,7 +74,9 @@ class TicketController extends AbstractController
 
     /**
      * @Route("/deAssign", name="ticket_deAssign", methods={"GET","POST"})
-     * @Security("is_granted('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_MANAGER')")
+     * @param TicketRepository $ticketRepository
+     * @return Response
      */
     public function deAssignAll(TicketRepository $ticketRepository): Response
     {
@@ -97,13 +91,17 @@ class TicketController extends AbstractController
 
     /**
      * @Route("/{id}", name="ticket_show", methods={"GET"})
+     * @param Ticket $ticket
+     * @return Response
      */
     public function show(Ticket $ticket): Response
     {
-        // if($this->getUser()->getId() !== $ticket->getUser()->getid()) {
-           // throw new Exception('404');
-        //}
         $user=$this->getUser();
+
+        $agent = User::roles['FLA'];
+        if($ticket->getUser()->getId() !== $this->getUser()->getId() || ($ticket->getUser()->getId() !== $this->getUser()->getId() && in_array($agent, $this->getUser()->getRoles(), false))) {
+               throw new NotFoundHttpException('404');
+        }
 
         return $this->render('ticket/show.html.twig', [
             'ticket' => $ticket,
@@ -114,6 +112,9 @@ class TicketController extends AbstractController
 
     /**
      * @Route("/{id}/close", name="ticket_close", methods={"GET"})
+     * @Security("is_granted('ROLE_AGENT')")
+     * @param Ticket $ticket
+     * @return Response
      */
     public function close(Ticket $ticket): Response
     {
@@ -125,6 +126,11 @@ class TicketController extends AbstractController
 
     /**
      * @Route("/{id}/escalate", name="ticket_escalate", methods={"GET", "POST"})
+     * @Security("is_granted('ROLE_AGENT')")
+     * @param Ticket $ticket
+     * @param UserRepository $userRepository
+     * @param Request $request
+     * @return Response
      */
     public function escalate(Ticket $ticket, UserRepository $userRepository, Request $request): Response
     {
@@ -145,6 +151,11 @@ class TicketController extends AbstractController
 
     /**
      * @Route("/{id}/reassign", name="ticket_reassign", methods={"GET", "POST"})
+     * @Security("is_granted('ROLE_MANAGER')")
+     * @param Ticket $ticket
+     * @param UserRepository $userRepository
+     * @param Request $request
+     * @return Response
      */
     public function reassign(Ticket $ticket, UserRepository $userRepository, Request $request): Response
     {
@@ -166,6 +177,10 @@ class TicketController extends AbstractController
 
     /**
      * @Route("/{id}/wontfix", name="ticket_wontfix", methods={"GET", "POST"})
+     * @Security("is_granted('ROLE_MANAGER')")
+     * @param Ticket $ticket
+     * @param Request $request
+     * @return Response
      */
     public function wontfix(Ticket $ticket, Request $request): Response
     {
@@ -190,9 +205,15 @@ class TicketController extends AbstractController
 
     /**
      * @Route("/{id}/reopen", name="ticket_reopen", methods={"GET"})
+     * @param Ticket $ticket
+     * @return Response
      */
     public function reopen(Ticket $ticket): Response
     {
+        if($ticket->getUser()->getId() !== $this->getUser()->getId()) {
+            throw new NotFoundHttpException('404');
+        }
+
         $ticket->setStatus(Ticket::status["in progress"]);
         $ticket->setClosed(NULL);
         $ticket->setReopened(true);
@@ -203,7 +224,6 @@ class TicketController extends AbstractController
     /**
      * @Route("/{id}/comment", name="ticket_comment", methods={"GET","POST"})
      * @param Request $request
-     * @param UserRepository $userRepository
      * @param Ticket $ticket
      * @return Response
      */
@@ -234,6 +254,9 @@ class TicketController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="ticket_edit", methods={"GET","POST"})
+     * @param Request $request
+     * @param Ticket $ticket
+     * @return Response
      */
     public function edit(Request $request, Ticket $ticket): Response
     {
@@ -260,6 +283,10 @@ class TicketController extends AbstractController
      */
     public function respond(Request $request, Ticket $ticket): Response
     {
+        if($ticket->getUser()->getId() !== $this->getUser()->getId()) {
+            throw new NotFoundHttpException('404');
+        }
+
         $form = $this->createForm(ResponseCustomerType::class);
         $form->handleRequest($request);
 
@@ -277,6 +304,9 @@ class TicketController extends AbstractController
 
     /**
      * @Route("/{id}/priority", name="ticket_priority", methods={"GET","POST"})
+     * @Security("is_granted('ROLE_MANAGER')")
+     * @param Request $request
+     * @param Ticket $ticket
      * @return Response
      */
     public function priority(Request $request, Ticket $ticket): Response
@@ -295,10 +325,12 @@ class TicketController extends AbstractController
 
     /**
      * @Route("/{id}", name="ticket_delete", methods={"DELETE"})
+     * @param Request $request
+     * @param Ticket $ticket
+     * @return Response
      */
     public function delete(Request $request, Ticket $ticket): Response
     {
-
         if ($this->isCsrfTokenValid('delete'.$ticket->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $comments= $ticket->getComments();
@@ -315,8 +347,11 @@ class TicketController extends AbstractController
 
     /**
      * @Route("/{id}/{user_id}", name="ticket_assign", methods={"GET"})
+     * @Security("is_granted('ROLE_AGENT')")
+     * @param Ticket $ticket
+     * @return RedirectResponse
      */
-    public function assignTicket(Ticket $ticket): \Symfony\Component\HttpFoundation\RedirectResponse
+    public function assignTicket(Ticket $ticket): RedirectResponse
     {
         $user=$this->getUser();
         $ticket->setStatus(Ticket::status['in progress']);

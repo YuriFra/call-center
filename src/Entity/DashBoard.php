@@ -57,6 +57,9 @@ class DashBoard
         return $this->percent;
     }
 
+    /**
+     * @param Ticket[] $tickets
+     */
     private function countOpen(array $tickets): void
     {
         foreach ($tickets as $ticket) {
@@ -78,6 +81,9 @@ class DashBoard
         }
     }
 
+    /**
+     * @param Ticket[] $tickets
+     */
     private function countReopened(array $tickets): void
     {
         foreach ($tickets as $ticket) {
@@ -89,10 +95,10 @@ class DashBoard
 
     private function countPercent(): void
     {
-        if ($this->counterClosed === 0) {
+        if ($this->counterClosed + $this->counterReopened === 0) {
             $this->percent = 0;
         } else {
-            $this->percent = ($this->counterReopened * 100) / $this->counterClosed;
+            $this->percent = ($this->counterReopened * 100) / ($this->counterClosed + $this->counterReopened);
         }
     }
 }
