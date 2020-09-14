@@ -6,7 +6,7 @@ PHP Symfony group project using Doctrine ORM, MVC, Twig & dependency injection
 - Type of Challenge: `Consolidation Challenge`
 - Duration: `5 days`
 - Deployment strategy : `heroku`
-- Team challenge : `Deni Khalikov (logic), Jeremia Verhulst (logic & styling), Laura Devriendt (main logic & styling), Yoann Stas (styling) & Yuri Franken (logic & styling)`
+- Team challenge : `Deni Khalikov (logic), Jeremia Verhulst (logic & styling), Laura Devriendt (main logic & styling), Yoann Stas (styling concept) & Yuri Franken (logic & styling)`
 
 
 ## The Mission
